@@ -447,7 +447,7 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 
 <noscript><p style="position:fixed;inset:auto 0 20px;text-align:center">Activa JavaScript para entrar al campamento 🏕️</p></noscript>
 
-<script src="datos.js?v=7"></script>
+<script src="datos.js?v=8"></script>
 <script>
 (() => {
 'use strict';
@@ -973,11 +973,13 @@ function banda() {
     <div class="banda">${SECRETOS.map(s => celda(s, D.secretos[s].insignia, true)).join('')}</div>
     <div class="separador"></div>
     ${completo() ? `<button class="boton" data-premio>🎁 Ver mis premios</button>` : `<p>🎁 Junta las 11 insignias y lee el mensaje de la botella para ganar el <b>gran premio</b>.</p>`}
-    <div class="acciones"><button class="boton sec" data-cerrar>Volver a la playa</button></div>`);
+    <div class="acciones"><button class="boton sec" data-cerrar>Volver a la playa</button></div>
+    <button class="enlace" data-reiniciar>↺ Volver a empezar los acertijos</button>`);
 }
 cuerpo.addEventListener('click', e => {
   if (e.target.closest('[data-insignias]')) return banda();
   if (e.target.closest('[data-premio]')) return premio();
+  if (e.target.closest('[data-reiniciar]')) { if (confirm('¿Borrar todas tus insignias y volver a empezar? 🏕️')) { try { localStorage.removeItem('c20'); } catch (er) {} location.reload(); } return; }
   const v = e.target.closest('[data-ver]'); if (!v) return;
   const id = v.dataset.ver;
   if (PRINCIPALES.includes(id)) recuerdo(id, $('#o-' + id));
@@ -1019,7 +1021,7 @@ function abrirCarta() {
         <button class="boton" id="sig" style="opacity:0;animation:verso .5s var(--ease-out) ${e.length*0.45+0.3}s forwards">${paso === P.estrofas.length ? 'Terminar 💜' : 'Seguir ›'}</button>`;
     } else {
       if (!hallados.has('poema')) { hallados.add('poema'); guardar(); carta.addEventListener('close', revisarFinal, { once: true }); }
-      cin.innerHTML = `${parche('honor', P.honor)}<p class="felicidades">${P.felicidades} 💜</p><p class="firma">— ${P.firma}</p>
+      cin.innerHTML = `${parche('honor', P.honor)}<p class="felicidades">${P.felicidades}&nbsp;💜</p><p class="firma">— ${P.firma}</p>
         <p id="respuesta" aria-live="polite"></p>
         <div class="acciones"><button class="boton" id="regano">${P.reganos[0][0]}</button><button class="boton sec" id="presumir">Presumir mi campamento ✨</button><button class="boton sec" id="volver">Volver a la playa</button></div>`;
       florecer();
