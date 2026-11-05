@@ -132,6 +132,16 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #burbuja{position:absolute;z-index:5;max-width:220px;padding:10px 14px;border-radius:16px;background:var(--crema);color:#2a1a55;font-weight:800;font-size:15px;box-shadow:var(--sombra);opacity:0;scale:.9;transition:opacity .2s,scale .2s var(--ease-out);pointer-events:none}
 #burbuja.ve{opacity:1;scale:1}
 
+#o-bocina{left:60%;bottom:1%;width:clamp(44px,10vmin,62px)}
+#o-bocina svg{transform-origin:50% 100%}
+.luces{position:absolute;inset:-60%;pointer-events:none;opacity:0;transition:opacity .6s;mix-blend-mode:screen;
+  background:conic-gradient(from 0deg at 50% 50%,rgba(255,0,170,0),rgba(255,0,170,.28),rgba(0,210,255,0) 25%,rgba(0,210,255,.28) 40%,rgba(255,220,0,0) 55%,rgba(255,220,0,.25) 70%,rgba(255,0,170,0) 85%)}
+#escena.fiesta .luces{opacity:1;animation:gira-copo 5s linear infinite}
+#escena.fiesta #o-bocina svg{animation:bum .625s ease-out infinite}
+@keyframes bum{0%{transform:scale(1.12)}100%{transform:scale(1)}}
+#escena.fiesta #o-cangrejo{animation-play-state:paused}
+#escena.fiesta #o-cangrejo svg{animation:baila .3125s ease-in-out infinite alternate}
+@keyframes baila{from{transform:rotate(-12deg) translateY(-5px)}to{transform:rotate(12deg) translateY(0)}}
 #o-copo{left:47%;top:-8%;width:44px;display:none}
 #o-copo.cae{display:grid;animation:copo 14s linear forwards}
 #o-copo svg{animation:gira-copo 6s linear infinite}
@@ -190,7 +200,12 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 .fotos.dos .polaroid img{width:100%;max-height:30dvh;object-fit:cover}
 .acciones{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px}
 
-.banda{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 8px;width:100%}
+.banda{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 4px;width:100%}
+.banda > *{width:31%}
+.vales{display:grid;gap:10px;width:100%;text-align:left}
+.vale{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;border:2px dashed rgba(242,193,78,.6);background:rgba(242,193,78,.08);line-height:1.4;font-weight:700}
+.vale span:first-child{font-size:26px}
+.vale small{display:block;font-weight:400;color:var(--texto-suave)}
 .banda button,.banda div{display:grid;justify-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--texto-suave);line-height:1.2}
 .banda .parche{width:78px;height:78px}
 .vacio .parche{filter:grayscale(1) brightness(.45);opacity:.6}
@@ -218,6 +233,19 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 .lluvia i{position:absolute;top:-10px;width:3px;height:3px;border-radius:50%;background:var(--oro);animation:llueve var(--t) linear infinite;animation-delay:var(--r)}
 @keyframes llueve{to{translate:0 105vh}}
 
+.libro{display:grid;gap:14px;justify-items:center;width:100%}
+.titulo-libro{font-family:var(--fuente-mano)!important;font-size:42px!important;color:var(--oro)}
+.pagina{width:100%;background:#f6eedc;color:#3a2a55;border-radius:6px 14px 14px 6px;padding:18px 14px 16px;box-shadow:inset 7px 0 0 #dccdaa,0 8px 20px rgba(0,0,0,.35);display:grid;gap:8px;justify-items:center;position:relative;text-align:center;rotate:-.6deg}
+.pagina:nth-of-type(even){rotate:.6deg}
+.pagina .num{position:absolute;top:6px;right:12px;font-family:var(--fuente-mano);font-size:22px;color:#9a7a4a}
+.pagina .fecha{color:#6b2fb3;font-size:22px}
+.pagina b{font-family:var(--fuente-titulo);font-size:20px;font-weight:600}
+.pagina.vacia p{color:#8a7a6a;font-family:var(--fuente-mano);font-size:23px;line-height:1.3;padding:18px 6px}
+.pagina .polaroid img{max-height:26dvh}
+.pagina.final{min-height:160px;place-content:center}
+#o-tienda .puerta{transition:fill .5s}
+#o-tienda.prendida .puerta{fill:#ffc77a}
+#o-tienda.prendida svg{filter:drop-shadow(0 0 24px rgba(255,180,90,.8)) brightness(1.12)}
 .solo-lector{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 @media (prefers-reduced-motion:reduce){
@@ -301,9 +329,9 @@ dialog[open]{animation:entra .32s var(--ease-out)}
     <svg viewBox="-16 -16 32 32"><circle r="15" fill="#1f9d55"/><circle r="7" fill="#fff"/><text y="3.6" font-size="10" font-weight="900" text-anchor="middle" fill="#111" font-family="Nunito,sans-serif">6</text><ellipse cx="-6" cy="-8" rx="4.5" ry="2.6" fill="#fff" opacity=".35"/></svg>
   </button>
 
-  <button class="obj" id="o-tienda" data-obj="tienda" aria-label="La casa de campaña: aquí está tu banda de insignias">
+  <button class="obj" id="o-tienda" data-obj="tienda" aria-label="La casa de campaña">
     <svg viewBox="0 0 220 150"><path d="M110 4 V22" stroke="#c4c9ee" stroke-width="3"/><path d="M110 4 L140 12 L110 20Z" fill="#8e4fd6"/>
-      <path d="M110 20 L210 145 H10Z" fill="#2346c8"/><path d="M110 20 L210 145 H150Z" fill="#1a3299"/><path d="M110 20 L140 145 H80Z" fill="#0b1240"/><path d="M110 20 L132 145 H110Z" fill="#6b2fb3" opacity=".9"/><path d="M110 20 L88 145 H110Z" fill="#7d3fb8"/>
+      <path d="M110 20 L210 145 H10Z" fill="#2346c8"/><path d="M110 20 L210 145 H150Z" fill="#1a3299"/><path class="puerta" d="M110 20 L140 145 H80Z" fill="#0b1240"/><path d="M110 20 L132 145 H110Z" fill="#6b2fb3" opacity=".9"/><path d="M110 20 L88 145 H110Z" fill="#7d3fb8"/>
       <path d="M110 20 L210 145 M110 20 L10 145" stroke="#5b7cf0" stroke-width="3"/><ellipse cx="110" cy="146" rx="105" ry="5" fill="rgba(0,0,0,.25)"/></svg>
   </button>
 
@@ -316,6 +344,10 @@ dialog[open]{animation:entra .32s var(--ease-out)}
   <button class="obj" id="o-cangrejo" data-obj="schmubsibu" aria-label="Un cangrejito">
     <svg viewBox="0 0 60 40"><g fill="#e8553e"><ellipse cx="30" cy="24" rx="16" ry="10"/><path d="M14 20 Q4 10 8 4 Q12 10 16 12Z M46 20 Q56 10 52 4 Q48 10 44 12Z"/><circle cx="8" cy="5" r="5"/><circle cx="52" cy="5" r="5"/></g><g stroke="#e8553e" stroke-width="2.5" stroke-linecap="round"><path d="M18 30 L10 38 M22 32 L17 39 M42 30 L50 38 M38 32 L43 39"/><path d="M25 15 V9 M35 15 V9"/></g><circle cx="25" cy="8" r="3" fill="#fff"/><circle cx="35" cy="8" r="3" fill="#fff"/><circle cx="25.5" cy="8.5" r="1.4" fill="#111"/><circle cx="35.5" cy="8.5" r="1.4" fill="#111"/></svg>
   </button>
+  <button class="obj" id="o-bocina" data-obj="sonidera" aria-label="Algo medio enterrado en la arena">
+    <svg viewBox="0 0 50 54"><rect x="7" y="2" width="36" height="46" rx="4" fill="#2a1f6e" stroke="#8e4fd6" stroke-width="2"/><circle cx="25" cy="15" r="8" fill="#0b0b18" stroke="#f2c14e" stroke-width="1.6"/><circle cx="25" cy="15" r="3" fill="#3a3a55"/><circle cx="25" cy="34" r="10.5" fill="#0b0b18" stroke="#f2c14e" stroke-width="1.6"/><circle cx="25" cy="34" r="4" fill="#3a3a55"/><circle cx="12" cy="6" r="1.5" fill="#e0383e"/><path d="M0 54 Q8 40 25 44 T50 54Z" fill="#5d4a8a"/></svg>
+  </button>
+  <div class="luces" aria-hidden="true"></div>
   <div id="burbuja" role="status" aria-live="polite"></div>
 
   <button class="obj" id="o-copo" data-obj="hielo" aria-label="Un copo de nieve en plena playa">
@@ -324,8 +356,9 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 </main>
 
 <nav class="hud" aria-label="Herramientas del campamento">
-  <button class="pill" id="btn-banda" aria-label="Ver mi banda de insignias">🎖️ <span id="cuenta">0/6</span></button>
+  <button class="pill" id="btn-banda" aria-label="Ver mis insignias">🎖️ <span id="cuenta">0/6</span></button>
   <button class="pill" id="btn-pista">🧭 Pista</button>
+  <button class="pill" id="btn-son" aria-label="Apagar el sonido">🔊</button>
 </nav>
 <div id="toast" role="status" aria-live="polite"></div>
 
@@ -349,13 +382,15 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 
 <noscript><p style="position:fixed;inset:auto 0 20px;text-align:center">Activa JavaScript para entrar al campamento 🏕️</p></noscript>
 
-<script src="datos.js"></script>
+<script src="datos.js?v=2"></script>
 <script>
 (() => {
 'use strict';
 const ITER = 250000;
 const PRINCIPALES = ['estrella','farol','flor','bola','luna','fogata'];
-const SECRETOS = ['coco','morse','schmubsibu','hielo'];
+const SECRETOS = ['coco','morse','schmubsibu','hielo','sonidera'];
+const TODOS = [...PRINCIPALES, ...SECRETOS, 'poema'];
+const completo = () => TODOS.every(x => hallados.has(x));
 const $ = s => document.querySelector(s);
 const escena = $('#escena'), dlg = $('#dlg'), cuerpo = $('#dlg-cuerpo');
 const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -417,9 +452,11 @@ const ICONOS = {
   morse:'<g fill="#f2c14e"><circle cx="-13" r="3.2"/><rect x="-7" y="-3.2" width="13" height="6.4" rx="3.2"/><circle cx="12" r="3.2"/></g><path d="M-14 -11 H14 M-14 11 H14" stroke="#c3a6f5" stroke-width="1.4" stroke-dasharray="2 3"/>',
   schmubsibu:'<path d="M-10,0 L-7,13 L7,13 L10,0Z" fill="#c98a4b"/><path d="M-6 2 L-5 12 M0 2 V12 M6 2 L5 12" stroke="#a0662f" stroke-width="1.2"/><path d="M-12,1 C-14,-8 -6,-14 0,-11 C6,-14 14,-8 12,1Z" fill="#f4a6c8"/><circle cy="-13" r="3" fill="#e0383e"/>',
   hielo:'<g stroke="#dff1ff" stroke-width="2" stroke-linecap="round"><path d="M-7,-12 V12 M-16,-6 L2,6 M-16,6 L2,-6"/></g><g transform="translate(7 1) scale(.65)"><path d="M0,-17 C8,-8 12,0 10,7 C8,14 -8,14 -10,7 C-12,0 -6,-4 -4,-9 C-2,-5 0,-4 1,-2 C3,-8 2,-12 0,-17Z" fill="#ff8a3d"/></g>',
+  sonidera:'<rect x="-11" y="-15" width="22" height="29" rx="3" fill="#0b0b18" stroke="#f2c14e" stroke-width="1.4"/><circle cy="-7" r="4.5" fill="#3a3a55" stroke="#f2c14e"/><circle cy="5" r="6" fill="#3a3a55" stroke="#f2c14e"/><path d="M14 -10 q4 5 0 10 M17 -13 q7 8 0 16" stroke="#ff4fb3" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
+  oro:'<path d="M0,-15 L4.4,-4.6 L15,-4.6 L6.4,2.2 L9.4,13 L0,6.6 L-9.4,13 L-6.4,2.2 L-15,-4.6 L-4.4,-4.6Z" fill="#fff6d6"/><text y="5" font-size="9" font-weight="900" text-anchor="middle" fill="#7a5a10" font-family="Nunito,sans-serif">20</text>',
   honor:'<path d="M0,-15 L4.4,-4.6 L15,-4.6 L6.4,2.2 L9.4,13 L0,6.6 L-9.4,13 L-6.4,2.2 L-15,-4.6 L-4.4,-4.6Z" fill="#f2c14e"/><text y="5" font-size="9" font-weight="900" text-anchor="middle" fill="#2a1f6e" font-family="Nunito,sans-serif">20</text>'
 };
-const COLORES = { estrella:['#16267a','#2346c8'], farol:['#3a1a6e','#6b2fb3'], flor:['#16267a','#2346c8'], bola:['#3a1a6e','#6b2fb3'], luna:['#16267a','#2346c8'], fogata:['#3a1a6e','#6b2fb3'], coco:['#2a1f6e','#4b3a9c'], morse:['#2a1f6e','#4b3a9c'], schmubsibu:['#2a1f6e','#4b3a9c'], hielo:['#2a1f6e','#4b3a9c'], honor:['#6b2fb3','#2346c8'] };
+const COLORES = { estrella:['#16267a','#2346c8'], farol:['#3a1a6e','#6b2fb3'], flor:['#16267a','#2346c8'], bola:['#3a1a6e','#6b2fb3'], luna:['#16267a','#2346c8'], fogata:['#3a1a6e','#6b2fb3'], coco:['#2a1f6e','#4b3a9c'], morse:['#2a1f6e','#4b3a9c'], schmubsibu:['#2a1f6e','#4b3a9c'], hielo:['#2a1f6e','#4b3a9c'], sonidera:['#2a1f6e','#4b3a9c'], oro:['#7a5a10','#c9962a'], honor:['#6b2fb3','#2346c8'] };
 let uid = 0;
 function parche(id, etiqueta) {
   const [a, b] = COLORES[id], n = 'arc' + (uid++);
@@ -462,6 +499,7 @@ async function descifrar(clave) {
 
 $('#form-clave').addEventListener('submit', async e => {
   e.preventDefault();
+  Son.iniciar();
   const btn = $('#btn-abrir'), txt = btn.textContent;
   btn.disabled = true; btn.textContent = 'Encendiendo la fogata…';
   try {
@@ -475,6 +513,8 @@ $('#form-clave').addEventListener('submit', async e => {
 });
 
 function entrar() {
+  D.secretos.sonidera = D.sonidera;
+  Son.ambiente();
   $('#candado').classList.add('adios');
   setTimeout(() => $('#candado').remove(), 900);
   escena.removeAttribute('inert');
@@ -510,18 +550,19 @@ function chispas(n) {
 async function recuerdo(id, el) {
   const nuevo = !hallados.has(id), R = D.recuerdos[id];
   if (ANIM[id]) await ANIM[id](el);
-  if (nuevo) { hallados.add(id); guardar(); cuenta(); }
+  if (nuevo) { hallados.add(id); guardar(); cuenta(); setTimeout(() => Son.sfx('logro'), 300); }
   const dos = R.fotos.length > 1;
   abrir(`<div class="${nuevo ? 'parche-ganado' : ''}">${parche(id, R.insignia)}</div>
     <p class="etiqueta">${nuevo ? '¡Insignia ganada!' : 'Insignia'} · ${R.insignia}</p>
     <div class="fotos ${dos ? 'dos' : ''}">${R.fotos.map((f, i) => `<figure class="polaroid"><img src="${f}" alt="Foto del recuerdo: ${R.titulo}${dos ? ' (' + (i+1) + ' de 2)' : ''}"></figure>`).join('')}</div>
     <p class="fecha">${R.fecha}</p><h2 id="dlg-titulo">${R.titulo}</h2><p>${R.texto}</p>
-    <div class="acciones"><button class="boton" data-cerrar>${nuevo ? 'Guardar en mi banda ✓' : 'Cerrar'}</button></div>`);
+    <div class="acciones"><button class="boton" data-cerrar>Seguir explorando ✨</button><button class="boton sec" data-insignias>Ver mis insignias 🎖️</button></div>`);
   if (nuevo) dlg.addEventListener('close', revisarFinal, { once: true });
 }
 function revisarFinal() {
   const n = PRINCIPALES.filter(p => hallados.has(p)).length;
-  if (n === 6) {
+  if (completo() && !hallados.has('premio')) { hallados.add('premio'); guardar(); setTimeout(premio, 450); return; }
+  if (n === 6 && !hallados.has('poema')) {
     setTimeout(() => { $('#o-botella').classList.add('llega'); aviso(D.poema.aviso + ' 🍾', 5000); }, 500);
   } else if (n === 3) aviso('¡Vas a la mitad, exploradora! 🎖️ 3 de 6');
 }
@@ -530,10 +571,11 @@ function revisarFinal() {
 function ganarSecreto(id, extra = '') {
   const nuevo = !hallados.has(id), S = D.secretos[id];
   hallados.add(id); guardar();
+  if (nuevo) { setTimeout(() => dlg.addEventListener('close', revisarFinal, { once: true }), 0); setTimeout(() => Son.sfx('logro'), 300); }
   abrir(`<div class="${nuevo ? 'parche-ganado' : ''}">${parche(id, S.insignia)}</div>
     <p class="etiqueta">${nuevo ? '¡Insignia secreta!' : 'Insignia secreta'} · ${S.insignia}</p>
     <h2 id="dlg-titulo">${S.titulo}</h2><p>${extra || S.texto}</p>
-    <div class="acciones"><button class="boton" data-cerrar>${nuevo ? 'Guardar en mi banda ✓' : 'Cerrar'}</button></div>`);
+    <div class="acciones"><button class="boton" data-cerrar>Seguir explorando ✨</button><button class="boton sec" data-insignias>Ver mis insignias 🎖️</button></div>`);
 }
 async function coco(el) {
   if (!el.classList.contains('caido')) { el.classList.add('cae'); await esperar(950); el.classList.remove('cae'); el.classList.add('caido'); }
@@ -558,14 +600,19 @@ function morse() {
   });
   $('#rindo').addEventListener('click', chk);
 }
+function burbuja(el, txt, ms = 2600) {
+  const b = $('#burbuja'), r = el.getBoundingClientRect();
+  b.textContent = txt;
+  b.classList.add('ve');
+  const h = b.offsetHeight;
+  b.style.left = Math.max(8, Math.min(innerWidth - b.offsetWidth - 8, r.left + r.width / 2 - b.offsetWidth / 2)) + 'px';
+  b.style.top = Math.max(70, r.top - h - 12) + 'px';
+  clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove('ve'), ms);
+}
 let toques = 0;
 function cangrejo(el) {
-  const S = D.secretos.schmubsibu, b = $('#burbuja'), r = el.getBoundingClientRect();
-  b.textContent = S.burbujas[toques % S.burbujas.length];
-  b.style.left = Math.max(8, Math.min(innerWidth - 230, r.left - 20)) + 'px';
-  b.style.top = (r.top - 64) + 'px';
-  b.classList.add('ve'); clearTimeout(b._t);
-  b._t = setTimeout(() => b.classList.remove('ve'), 2600);
+  const S = D.secretos.schmubsibu, b = $('#burbuja');
+  burbuja(el, S.burbujas[toques % S.burbujas.length]);
   toques++;
   if (toques === 3 && !hallados.has('schmubsibu')) setTimeout(() => { b.classList.remove('ve'); ganarSecreto('schmubsibu'); }, 2000);
 }
@@ -576,19 +623,242 @@ function soltarCopo() {
 }
 copo.addEventListener('animationend', e => { if (e.animationName === 'copo') copo.classList.remove('cae'); });
 
+/* ---------- bocina sonidera: cumbia hecha con sintetizador (original) ---------- */
+/* Motor de sonido: todo hecho con código, como en Olimpo. Sonidos pregrabados en memoria (rápidos en celular),
+   cuerdas pulsadas reales (Karplus-Strong), güiro hecho de raspaditos, cencerro con armónicos de metal y eco de sala. */
+const Son = (() => {
+  let ac = null, maestro, sala, ecoIn, amb, on = true, B = {};
+  const sr = () => ac.sampleRate;
+  function hacer(seg, fn) { const n = Math.floor(sr() * seg), b = ac.createBuffer(1, n, sr()), d = b.getChannelData(0); fn(d, sr()); return b; }
+  function iniciar() {
+    if (ac) { if (ac.state === 'suspended') ac.resume(); return true; }
+    try {
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}   // iPhone: que suene aunque tenga el timbre en silencio
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      maestro = ac.createGain(); maestro.gain.value = .7;
+      const lim = ac.createDynamicsCompressor(); lim.threshold.value = -14; lim.knee.value = 8; lim.ratio.value = 12; lim.attack.value = .003; lim.release.value = .2;
+      maestro.connect(lim); lim.connect(ac.destination);   // limitador: nada se satura ni "truena"
+      sala = ac.createConvolver();
+      sala.buffer = (() => { const n = Math.floor(sr() * 1.6), b = ac.createBuffer(2, n, sr()); for (let k = 0; k < 2; k++) { const d = b.getChannelData(k); for (let j = 0; j < n; j++) d[j] = (Math.random() * 2 - 1) * Math.pow(1 - j / n, 3.2); } return b; })();
+      const sg = ac.createGain(); sg.gain.value = .25; sala.connect(sg); sg.connect(maestro);
+      ecoIn = ac.createDelay(1.5); ecoIn.delayTime.value = .47;                       // el eco de sonidero
+      const vuelta = ac.createGain(), apaga = ac.createBiquadFilter(); vuelta.gain.value = .38; apaga.type = 'lowpass'; apaga.frequency.value = 2400;
+      ecoIn.connect(apaga); apaga.connect(vuelta); vuelta.connect(ecoIn); apaga.connect(maestro); apaga.connect(sala);
+      // ruidos base
+      B.cafe = hacer(4, d => { let u = 0; for (let i = 0; i < d.length; i++) { u = (u + .02 * (Math.random() * 2 - 1)) / 1.02; d[i] = u * 3.5; } });
+      B.blanco = hacer(2, d => { for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; });
+      // güiro: muchos raspaditos seguidos que suben y bajan, como la varilla sobre las ranuras
+      const guiro = (seg, n) => hacer(seg, (d, r) => {
+        for (let c = 0; c < n; c++) {
+          const s = Math.floor((c / n) * seg * r * .92 + Math.random() * r * .002), amp = Math.sin(Math.PI * (c + .5) / n) * (.6 + Math.random() * .4);
+          for (let k = 0; k < r * .004 && s + k < d.length; k++) d[s + k] += (Math.random() * 2 - 1) * amp * Math.exp(-k / (r * .0009));
+        }
+        let pk = 0; for (let i = d.length - 1; i > 0; i--) { d[i] = d[i] - d[i - 1]; pk = Math.max(pk, Math.abs(d[i])); }
+        let lp = 0; for (let i = 0; i < d.length; i++) { lp += (d[i] / (pk || 1) * .7 - lp) * .4; d[i] = lp; }   // sin picos: suena a madera, no a estática
+      });
+      B.guiroL = guiro(.26, 22); B.guiroC = guiro(.085, 7);
+      // cencerro: dos tonos de metal que no son armónicos entre sí
+      B.campana = hacer(.4, (d, r) => { for (let i = 0; i < d.length; i++) { const t = i / r, a = Math.min(1, t / .002), e = a * (Math.exp(-t / .06) * .75 + Math.exp(-t / .22) * .25); d[i] = (Math.sin(2 * Math.PI * 562 * t) * .45 + Math.sin(2 * Math.PI * 845 * t) * .35 + Math.sin(2 * Math.PI * 1551 * t) * .12 + Math.sin(2 * Math.PI * 2330 * t) * .05) * e * .8; } });
+      // tambora: golpe grave que baja de tono + parche
+      B.bombo = hacer(.4, (d, r) => { let ph = 0; for (let i = 0; i < d.length; i++) { const t = i / r, f = 45 + 95 * Math.exp(-t / .04); ph += 2 * Math.PI * f / r; d[i] = Math.sin(ph) * Math.exp(-t / .13) + (Math.random() * 2 - 1) * Math.exp(-t / .006) * .25; } });
+      B.click = hacer(.014, (d, r) => { let lp = 0; for (let i = 0; i < d.length; i++) { lp += ((Math.random() * 2 - 1) * Math.exp(-i / (r * .0018)) - lp) * .35; d[i] = lp * 1.6 * Math.min(1, i / 8); } });
+      B.bola = hacer(.12, (d, r) => { for (let i = 0; i < d.length; i++) { const t = i / r; d[i] = (Math.sin(2 * Math.PI * 2350 * t) * .6 + Math.sin(2 * Math.PI * 3900 * t) * .3) * Math.exp(-t / .012) + (Math.random() * 2 - 1) * Math.exp(-t / .002) * .5; } });
+      return true;
+    } catch (e) { ac = null; return false; }
+  }
+  const ahora = () => ac.currentTime;
+  let dest = null;   // cuando suena la cumbia, todo pasa por su propio bus para poder apagarla de golpe
+  function out(g, { seco = false, eco = false } = {}) {
+    if (dest) { g.connect(dest.seco); if (eco) g.connect(dest.eco); return; }
+    g.connect(maestro); if (!seco) g.connect(sala); if (eco) g.connect(ecoIn);
+  }
+  function crearBus() {
+    const a = ac.createGain(), e = ac.createGain(); a.connect(maestro); a.connect(sala); e.connect(ecoIn);
+    return { seco: a, eco: e, apagar(lento) { const t = ac.currentTime; [a, e].forEach(x => { x.gain.cancelScheduledValues(t); x.gain.setTargetAtTime(0, t, lento ? .6 : .15); }); setTimeout(() => { a.disconnect(); e.disconnect(); }, 5000); } };
+  }
+  function toca(b, t, vol, { rate = 1, eco = false, seco = false } = {}) {
+    const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = b; s.playbackRate.value = rate; g.gain.value = vol;
+    s.connect(g); out(g, { seco, eco }); s.start(t); return s;
+  }
+  // cuerda pulsada real (Karplus-Strong): requinto, bajo y arpa
+  const cuerdas = {};
+  function cuerda(f, t, vol, { brillo = .5, eco = false, largo = 2 } = {}) {
+    const k = Math.round(f) + '|' + brillo;
+    if (!cuerdas[k]) cuerdas[k] = hacer(largo, (d, r) => {
+      const per = Math.max(2, Math.round(r / f)), linea = new Float32Array(per); for (let i = 0; i < per; i++) linea[i] = Math.random() * 2 - 1;
+      let p = 0; const dec = .994 + brillo * .005;
+      for (let j = 0; j < d.length; j++) { const s = (p + 1) % per, v = (linea[p] + linea[s]) * .5 * dec; d[j] = linea[p]; linea[p] = v; p = s; }
+      const ini = Math.floor(d.length * .6); for (let j = ini; j < d.length; j++) d[j] *= 1 - (j - ini) / (d.length - ini);   // se apaga suave, sin cortarse de golpe
+      for (let j = 0; j < 40; j++) d[j] *= j / 40;
+    });
+    const fl = ac.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = 1800 + brillo * 5000;
+    const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = cuerdas[k]; g.gain.value = vol;
+    s.connect(fl); fl.connect(g); out(g, { eco }); s.start(t);
+  }
+  function tono(f, t, vol, dura, { tipo = 'sine', desliza, eco = false } = {}) {
+    const o = ac.createOscillator(), g = ac.createGain(); o.type = tipo; o.frequency.setValueAtTime(f, t); if (desliza) o.frequency.exponentialRampToValueAtTime(desliza, t + dura);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + dura);
+    o.connect(g); out(g, { eco }); o.start(t); o.stop(t + dura + .05);
+  }
+  const celesta = (f, t, vol) => [[1, 1], [2, .3], [3.01, .1], [4.1, .05]].forEach(([m, v], i) => tono(f * m, t, vol * v, 1.1 / (1 + i * .8)));
+  function soplo(t, dura, f1, f2, vol, tipo = 'lowpass', q = .8, buf) {
+    const s = ac.createBufferSource(), fl = ac.createBiquadFilter(), g = ac.createGain(); s.buffer = buf || B.cafe; s.loop = true;
+    fl.type = tipo; fl.Q.value = q; fl.frequency.setValueAtTime(f1, t); fl.frequency.exponentialRampToValueAtTime(f2, t + dura * .7);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + dura * .3); g.gain.exponentialRampToValueAtTime(.0001, t + dura);
+    s.connect(fl); fl.connect(g); out(g); s.start(t, Math.random()); s.stop(t + dura + .05);
+  }
+  // acordeón: dos lengüetas casi iguales que "laten", con fuelle (vibrato) y caja de resonancia
+  function acordeon(f, t, dura, vol) {
+    const g = ac.createGain(), caja = ac.createBiquadFilter(), brillo = ac.createBiquadFilter();
+    caja.type = 'peaking'; caja.frequency.value = 1200; caja.Q.value = 1.2; caja.gain.value = 6; brillo.type = 'lowpass'; brillo.frequency.value = 3200;
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .04); g.gain.setValueAtTime(vol * .9, t + dura * .75); g.gain.exponentialRampToValueAtTime(.0001, t + dura + .06);
+    [1, 1.006, .5].forEach((m, i) => {
+      const o = ac.createOscillator(); o.type = i === 2 ? 'square' : 'sawtooth'; o.frequency.value = f * m;
+      const vib = ac.createOscillator(), vg = ac.createGain(); vib.frequency.value = 5.2; vg.gain.value = f * m * .006; vib.connect(vg); vg.connect(o.frequency);
+      const og = ac.createGain(); og.gain.value = i === 2 ? .25 : .5; o.connect(og); og.connect(caja); o.start(t); vib.start(t); o.stop(t + dura + .1); vib.stop(t + dura + .1);
+    });
+    caja.connect(brillo); brillo.connect(g); out(g, { eco: true });
+  }
+  // ambiente: el mar que va y viene + la fogata que truena
+  let tFuego;
+  function ambiente() {
+    if (amb || !ac) return;
+    const t = ahora();
+    const mar = ac.createBufferSource(); mar.buffer = B.cafe; mar.loop = true;
+    const fl = ac.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = 520;
+    const g = ac.createGain(); g.gain.value = .0001; g.gain.exponentialRampToValueAtTime(.16, t + 3);
+    const lfo = ac.createOscillator(), lg = ac.createGain(); lfo.frequency.value = .085; lg.gain.value = .11; lfo.connect(lg); lg.connect(g.gain);
+    const lf2 = ac.createGain(); lf2.gain.value = 260; lfo.connect(lf2); lf2.connect(fl.frequency);
+    mar.connect(fl); fl.connect(g); g.connect(maestro);
+    const espuma = ac.createBufferSource(); espuma.buffer = B.blanco; espuma.loop = true;
+    const ef = ac.createBiquadFilter(); ef.type = 'bandpass'; ef.frequency.value = 2600; ef.Q.value = .5;
+    const eg = ac.createGain(); eg.gain.value = .007; const lg2 = ac.createGain(); lg2.gain.value = .006; lfo.connect(lg2); lg2.connect(eg.gain);
+    espuma.connect(ef); ef.connect(eg); eg.connect(maestro);
+    mar.start(t); espuma.start(t); lfo.start(t);
+    amb = { parar: () => { try { mar.stop(); espuma.stop(); lfo.stop(); } catch (e) {} amb = null; } };
+    const truena = () => { if (amb && on) { const n = 1 + (Math.random() * 3 | 0), t1 = ahora(); for (let i = 0; i < n; i++) toca(B.click, t1 + Math.random() * .12, .025 + Math.random() * .04, { rate: .4 + Math.random() * .6, seco: true }); } tFuego = setTimeout(truena, 350 + Math.random() * 900); };
+    truena();
+  }
+  const efectos = {
+    logro: () => { const t = ahora(); [784, 988, 1175, 1568].forEach((f, i) => celesta(f, t + i * .09, .09)); },
+    estrella: () => { const t = ahora(); [1319, 1568, 1760, 2093, 2637].forEach((f, i) => celesta(f, t + i * .13, .07)); },
+    farol: () => { const t = ahora(); soplo(t, 1.2, 300, 900, .25); [659, 784, 988].forEach((f, i) => cuerda(f, t + .3 + i * .12, .35, { brillo: .6 })); },
+    flor: () => { const t = ahora(); [523, 659, 784, 1047, 1319].forEach((f, i) => cuerda(f, t + i * .07, .32, { brillo: .7 })); },
+    bola: () => { const t = ahora(); toca(B.bola, t, .5); toca(B.bola, t + .09, .25, { rate: 1.08 }); soplo(t + .1, .8, 200, 140, .12); },
+    luna: () => { const t = ahora(); soplo(t, 1.4, 200, 3000, .4, 'bandpass', 1.5, B.blanco); soplo(t, 1.2, 80, 60, .5); },
+    fogata: () => { const t = ahora(); soplo(t, 1.6, 250, 800, .6); for (let i = 0; i < 26; i++) toca(B.click, t + Math.random() * 1.4, .1 + Math.random() * .2, { rate: .5 + Math.random() * 1.4 }); },
+    coco: () => { const t = ahora(); soplo(t, .5, 2000, 500, .1, 'bandpass', 1, B.blanco); tono(110, t + .7, .7, .4, { desliza: 55 }); toca(B.bombo, t + .7, .4, { rate: 1.6 }); },
+    morse: () => { const t = ahora(); [0, .14, .28].forEach((r, i) => tono(i === 1 ? 880 : 740, t + r, .06, .1, { tipo: 'square' })); },
+    cangrejo: () => { const t = ahora(); [0, .07, .16].forEach(r => toca(B.click, t + r, .4, { rate: 2.2 })); },
+    hielo: () => { const t = ahora(); [3136, 3951, 4699, 5274].forEach((f, i) => tono(f, t + i * .05, .05, 1.2)); soplo(t, .9, 5000, 8000, .1, 'bandpass', 1, B.blanco); },
+    tienda: () => { const t = ahora(); toca(B.click, t, .5, { rate: 1.6 }); [262, 330, 392, 523].forEach((f, i) => cuerda(f, t + .2 + i * .05, .3, { brillo: .4 })); },
+    botella: () => { const t = ahora(); tono(600, t, .4, .12, { desliza: 300 }); toca(B.click, t, .6, { rate: .6 }); [1047, 1319, 1568, 2093].forEach((f, i) => celesta(f, t + .25 + i * .12, .07)); },
+    pagina: () => { const t = ahora(); soplo(t, .35, 2500, 4500, .08, 'bandpass', .8, B.blanco); }
+  };
+  return {
+    iniciar, ambiente, ahora, toca, cuerda, acordeon, tono, crearBus, usar: b => { dest = b; }, B: () => B, ok: () => !!ac && on,
+    sfx(n) { if (!on || !iniciar()) return; try { efectos[n] && efectos[n](); } catch (e) {} },
+    alternar() { on = !on; if (ac) { maestro.gain.setTargetAtTime(on ? .7 : 0, ac.currentTime, .05); if (on) ac.resume(); } return on; },
+    get on() { return on; }
+  };
+})();
+
+let sonando = null;
+function cumbia(el) {
+  if (sonando) { sonando.parar(); return; }
+  const S = D.secretos.sonidera;
+  if (!Son.on || !Son.iniciar()) { aviso('🔇 Prende el sonido arriba para escuchar la bocina'); return; }
+  const B = Son.B(), beat = 60 / 98, t0 = Son.ahora() + .1, BARS = 12, fuentes = [], bus = Son.crearBus();
+  Son.usar(bus);
+  const toca = (b, t, v, o) => fuentes.push(Son.toca(b, t, v, o));
+  // progresión clásica de cumbia: La menor y Mi
+  const BAJO = [[110, 164.8], [82.4, 123.5]];
+  const MEL = [
+    [[0, 659.3, .5], [.5, 587.3, .5], [1, 523.3, .5], [1.5, 493.9, .5], [2, 523.3, 1], [3, 440, 1]],
+    [[0, 493.9, .5], [.5, 523.3, .5], [1, 587.3, .5], [1.5, 523.3, .5], [2, 493.9, 1], [3, 415.3, 1]],
+    [[0, 659.3, .5], [.5, 784, .5], [1, 659.3, .5], [1.5, 587.3, .5], [2, 523.3, .5], [2.5, 587.3, .5], [3, 659.3, 1]],
+    [[0, 587.3, .5], [.5, 523.3, .5], [1, 493.9, .5], [1.5, 415.3, .5], [2, 440, 2]]
+  ];
+  for (let bar = 0; bar < BARS; bar++) {
+    const tb = t0 + bar * 4 * beat, am = bar % 2 === 0;
+    for (let b = 0; b < 4; b++) {
+      const t = tb + b * beat;
+      toca(B.guiroL, t, .5, { seco: true }); toca(B.guiroC, t + beat * .5, .35, { seco: true }); toca(B.guiroC, t + beat * .75, .35, { seco: true });
+      toca(B.campana, t + beat * .5, .32);
+    }
+    toca(B.bombo, tb, .7); toca(B.bombo, tb + 2 * beat, .7); toca(B.bombo, tb + 3.5 * beat, .45, { rate: 1.15 });
+    const [r, q] = BAJO[am ? 0 : 1];
+    Son.cuerda(r, tb, .6, { brillo: .2 }); Son.cuerda(q, tb + 2 * beat, .55, { brillo: .2 }); Son.cuerda(r, tb + 3.5 * beat, .45, { brillo: .2 });
+    if (bar >= 2 && bar < BARS - 2) MEL[(bar - 2) % 4].forEach(([o, f, d]) => Son.acordeon(f, tb + o * beat, d * beat * .92, .07));
+    if (bar >= BARS - 2) MEL[(bar % 2)].forEach(([o, f, d]) => Son.cuerda(f, tb + o * beat, .4, { brillo: .65, eco: true }));   // el requinto cierra con eco
+  }
+  const fin = t0 + BARS * 4 * beat; toca(B.bombo, fin, 1); Son.cuerda(110, fin, 1, { brillo: .2 }); Son.acordeon(440, fin, beat * 2, .08);
+  escena.classList.add('fiesta');
+  aviso('🔊 ¡Súbele! (si no suena, quita el modo silencio)', 3500);
+  const timers = [];
+  timers.push(setTimeout(() => burbuja(el, S.burbuja, 6000), 2 * 4 * beat * 1000));
+  if (!hallados.has('sonidera')) timers.push(setTimeout(() => ganarSecreto('sonidera'), 6 * 4 * beat * 1000));
+  Son.usar(null);
+  const parar = lento => {
+    timers.forEach(clearTimeout); sonando = null; escena.classList.remove('fiesta');
+    bus.apagar(lento);
+  };
+  timers.push(setTimeout(() => parar(true), (fin - Son.ahora() + 1.5) * 1000));
+  sonando = { parar };
+}
+
+/* ---------- casa de campaña: luz + libro de aventuras ---------- */
+async function tienda(el) {
+  el.classList.add('prendida');
+  burbuja(el, D.libro.burbuja, 2400);
+  await esperar(1500);
+  libro();
+}
+function libro() {
+  const L = D.libro;
+  const pags = PRINCIPALES.map((p, i) => {
+    const R = D.recuerdos[p];
+    if (!hallados.has(p)) return `<div class="pagina vacia"><span class="num">${i + 1}</span><p>${L.vacia}</p></div>`;
+    return `<button class="pagina" data-ver="${p}"><span class="num">${i + 1}</span>
+      <span class="fotos ${R.fotos.length > 1 ? 'dos' : ''}">${R.fotos.map(f => `<span class="polaroid"><img src="${f}" alt="${R.titulo}"></span>`).join('')}</span>
+      <span class="fecha">${R.fecha}</span><b>${R.titulo}</b></button>`;
+  }).join('');
+  abrir(`<div class="libro"><p class="etiqueta">${D.clan}</p><h2 id="dlg-titulo" class="titulo-libro">${L.titulo}</h2><p class="fecha">${L.sub}</p>
+    ${pags}
+    <div class="pagina vacia final"><p>${L.final}</p></div>
+    <div class="acciones"><button class="boton" data-insignias>Ver mis insignias 🎖️</button><button class="boton sec" data-cerrar>Volver a la playa</button></div></div>`);
+  dlg.addEventListener('close', () => $('#o-tienda').classList.remove('prendida'), { once: true });
+}
+
+/* ---------- gran premio ---------- */
+function premio() {
+  const P = D.premio;
+  abrir(`<div class="parche-ganado">${parche('oro', P.insignia)}</div><p class="etiqueta">Gran premio</p>
+    <h2 id="dlg-titulo">${P.titulo}</h2><p>${P.texto}</p>
+    <div class="vales">${P.vales.map(([e, t, s]) => `<div class="vale"><span aria-hidden="true">${e}</span><span>${t}${s ? `<small>${s}</small>` : ''}</span></div>`).join('')}</div>
+    <p>${P.nota}</p>
+    <div class="acciones"><button class="boton" data-cerrar>¡Los quiero todos! 🎁</button></div>`);
+}
+
 /* ---------- banda de insignias ---------- */
 function banda() {
   const celda = (id, nombre, secreto) => hallados.has(id)
     ? `<button data-ver="${id}">${parche(id, nombre)}<span>${nombre}</span></button>`
     : `<div class="vacio">${parche(id, '? ? ?')}<span>${secreto ? 'Secreta' : 'Por encontrar'}</span></div>`;
   const nS = SECRETOS.filter(s => hallados.has(s)).length;
-  abrir(`<p class="etiqueta">Banda de insignias · ${D.clan}</p><h2 id="dlg-titulo">${D.nombre}</h2>
+  const nP = PRINCIPALES.filter(p => hallados.has(p)).length;
+  abrir(`<p class="etiqueta">Mis insignias · ${D.clan}</p><h2 id="dlg-titulo">${D.nombre}</h2>
+    <p class="etiqueta">Recuerdos · ${nP}/6</p>
     <div class="banda">${PRINCIPALES.map(p => celda(p, D.recuerdos[p].insignia)).join('')}</div>
-    <div class="separador"></div><p class="etiqueta">Secretas · ${nS}/4</p>
+    <div class="separador"></div><p class="etiqueta">Secretas · ${nS}/5</p>
     <div class="banda">${SECRETOS.map(s => celda(s, D.secretos[s].insignia, true)).join('')}</div>
+    <div class="separador"></div>
+    ${completo() ? `<button class="boton" data-premio>🎁 Ver mis premios</button>` : `<p>🎁 Junta las 11 insignias y lee el mensaje de la botella para ganar el <b>gran premio</b>.</p>`}
     <div class="acciones"><button class="boton sec" data-cerrar>Volver a la playa</button></div>`);
 }
 cuerpo.addEventListener('click', e => {
+  if (e.target.closest('[data-insignias]')) return banda();
+  if (e.target.closest('[data-premio]')) return premio();
   const v = e.target.closest('[data-ver]'); if (!v) return;
   const id = v.dataset.ver;
   if (PRINCIPALES.includes(id)) recuerdo(id, $('#o-' + id));
@@ -597,16 +867,18 @@ cuerpo.addEventListener('click', e => {
 });
 
 /* ---------- pista ---------- */
+const OBJ_SECRETO = { coco:'#o-coco', morse:'#o-faro', schmubsibu:'#o-cangrejo', hielo:null, sonidera:'#o-bocina' };
+const brillar = sel => { const el = sel && $(sel); if (!el) return; el.classList.add('pulsa'); setTimeout(() => el.classList.remove('pulsa'), 3200); };
 $('#btn-pista').addEventListener('click', () => {
   const p = PRINCIPALES.find(x => !hallados.has(x));
-  if (!p) {
-    if (!$('#carta').open) { aviso('Ya tienes las 6. Mira el mar… 🍾'); $('#o-botella').classList.add('pulsa'); setTimeout(() => $('#o-botella').classList.remove('pulsa'), 3200); }
-    return;
-  }
-  aviso(D.recuerdos[p].pista);
-  const el = $('#o-' + p); el.classList.add('pulsa'); setTimeout(() => el.classList.remove('pulsa'), 3200);
+  if (p) { aviso(D.recuerdos[p].pista); return brillar('#o-' + p); }
+  if (!hallados.has('poema')) { aviso('Ya tienes las 6. Mira el mar… 🍾'); return brillar('#o-botella'); }
+  const s = SECRETOS.find(x => !hallados.has(x));
+  if (s) { aviso('🤫 ' + D.pistasSecretas[s]); if (s === 'hielo') soltarCopo(); return; }
+  aviso('¡Ya lo completaste todo, exploradora! 🎁 Toca tus insignias para ver tus premios');
 });
 $('#btn-banda').addEventListener('click', banda);
+$('#btn-son').addEventListener('click', e => { const on = Son.alternar(); if (on) { Son.iniciar(); Son.ambiente(); } e.currentTarget.textContent = on ? '🔊' : '🔇'; e.currentTarget.setAttribute('aria-label', on ? 'Apagar el sonido' : 'Prender el sonido'); });
 
 /* ---------- carta final ---------- */
 const carta = $('#carta'), cin = $('#carta-in');
@@ -614,6 +886,7 @@ function abrirCarta() {
   const P = D.poema; let paso = -1;
   carta.showModal();
   const mostrar = () => {
+    Son.sfx('pagina');
     paso++;
     if (paso === 0) {
       cin.innerHTML = `<p class="etiqueta">Mensaje en una botella</p><h2>${P.titulo}</h2><button class="boton" id="sig">Leer 📜</button>`;
@@ -623,6 +896,7 @@ function abrirCarta() {
         <p class="estrofa">${e.map((v, i) => `<span style="animation-delay:${i*0.45}s">${v}</span>`).join('')}</p>
         <button class="boton" id="sig" style="opacity:0;animation:verso .5s var(--ease-out) ${e.length*0.45+0.3}s forwards">${paso === P.estrofas.length ? 'Terminar 💜' : 'Seguir ›'}</button>`;
     } else {
+      if (!hallados.has('poema')) { hallados.add('poema'); guardar(); carta.addEventListener('close', revisarFinal, { once: true }); }
       cin.innerHTML = `${parche('honor', P.honor)}<p class="felicidades">${P.felicidades} 💜</p><p class="firma">— ${P.firma}</p>
         <p id="respuesta" aria-live="polite"></p>
         <div class="acciones"><button class="boton" id="regano">${P.reganos[0][0]}</button><button class="boton sec" id="presumir">Presumir mi campamento ✨</button><button class="boton sec" id="volver">Volver a la playa</button></div>`;
@@ -664,12 +938,14 @@ carta.addEventListener('close', () => { $('#retamas').innerHTML = ''; });
 escena.addEventListener('click', e => {
   const el = e.target.closest('[data-obj]'); if (!el || !D) return;
   const id = el.dataset.obj;
+  if (id !== 'sonidera') Son.sfx(id === 'schmubsibu' ? 'cangrejo' : id);
   if (PRINCIPALES.includes(id)) recuerdo(id, el);
   else if (id === 'coco') coco(el);
   else if (id === 'morse') morse();
   else if (id === 'schmubsibu') cangrejo(el);
   else if (id === 'hielo') { copo.classList.remove('cae'); ganarSecreto('hielo'); }
-  else if (id === 'tienda') banda();
+  else if (id === 'sonidera') cumbia(el);
+  else if (id === 'tienda') tienda(el);
   else if (id === 'botella') abrirCarta();
 });
 })();
