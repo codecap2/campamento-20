@@ -134,7 +134,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 #o-bocina{left:66%;bottom:.5%;width:clamp(40px,9vmin,54px)}
 #o-bocina svg{transform-origin:50% 100%}
-.luces{position:absolute;inset:-60%;pointer-events:none;opacity:0;transition:opacity .6s;mix-blend-mode:screen;
+.luces{position:absolute;inset:-60%;pointer-events:none;opacity:0;transition:opacity .6s;will-change:transform;
   background:conic-gradient(from 0deg at 50% 50%,rgba(255,0,170,0),rgba(255,0,170,.28),rgba(0,210,255,0) 25%,rgba(0,210,255,.28) 40%,rgba(255,220,0,0) 55%,rgba(255,220,0,.25) 70%,rgba(255,0,170,0) 85%)}
 #escena.fiesta .luces{opacity:1;animation:gira-copo 5s linear infinite}
 #escena.fiesta #o-bocina svg{animation:bum .625s ease-out infinite}
@@ -259,6 +259,10 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 #o-tienda.prendida svg{filter:drop-shadow(0 0 24px rgba(255,180,90,.8)) brightness(1.12)}
 .solo-lector{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
+@media (max-width:760px),(pointer:coarse){
+  .pill,dialog,#candado{backdrop-filter:none;-webkit-backdrop-filter:none}
+  .pill{background:rgba(10,16,60,.9)} dialog{background:rgba(13,20,72,.97)} #candado{background:rgba(5,9,35,.78)}
+}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   .estrofa span{opacity:1;translate:0 0}
@@ -755,13 +759,14 @@ const Son = (() => {
     } catch (e) { ac = null; return false; }
   }
   const ahora = () => ac.currentTime;
+  function calentar(f, brillo) { const d = dest; dest = null; cuerda(f, ac.currentTime, .00001, { brillo }); dest = d; }
   let dest = null;   // cuando suena la cumbia, todo pasa por su propio bus para poder apagarla de golpe
   function out(g, { seco = false, eco = false } = {}) {
     if (dest) { g.connect(dest.seco); if (eco) g.connect(dest.eco); return; }
     g.connect(maestro); if (!seco) g.connect(sala); if (eco) g.connect(ecoIn);
   }
   function crearBus() {
-    const a = ac.createGain(), e = ac.createGain(); a.connect(maestro); a.connect(sala); e.connect(ecoIn);
+    const a = ac.createGain(), e = ac.createGain(); a.connect(maestro); e.connect(ecoIn);   // sin eco de sala: la cumbia ya trae su propio eco y así el celular no se cansa
     return { seco: a, eco: e, apagar(lento) { const t = ac.currentTime; [a, e].forEach(x => { x.gain.cancelScheduledValues(t); x.gain.setTargetAtTime(0, t, lento ? .6 : .15); }); setTimeout(() => { a.disconnect(); e.disconnect(); }, 5000); } };
   }
   function toca(b, t, vol, { rate = 1, eco = false, seco = false } = {}) {
@@ -844,7 +849,7 @@ const Son = (() => {
     pagina: () => { const t = ahora(); soplo(t, .35, 2500, 4500, .08, 'bandpass', .8, B.blanco); }
   };
   return {
-    iniciar, ambiente, ahora, toca, cuerda, acordeon, tono, crearBus, eco: (t, fb) => { ecoIn.delayTime.setValueAtTime(t, ac.currentTime); vueltaEco.gain.setValueAtTime(fb, ac.currentTime); }, usar: b => { dest = b; }, B: () => B, ok: () => !!ac && on,
+    iniciar, ambiente, ahora, toca, cuerda, acordeon, tono, crearBus, calentar, eco: (t, fb) => { ecoIn.delayTime.setValueAtTime(t, ac.currentTime); vueltaEco.gain.setValueAtTime(fb, ac.currentTime); }, usar: b => { dest = b; }, B: () => B, ok: () => !!ac && on,
     sfx(n) { if (!on || !iniciar()) return; try { efectos[n] && efectos[n](); } catch (e) {} },
     alternar() { on = !on; if (ac) { maestro.gain.setTargetAtTime(on ? .7 : 0, ac.currentTime, .05); if (on) ac.resume(); } return on; },
     get on() { return on; }
@@ -856,8 +861,13 @@ function cumbia(el) {
   if (sonando) { sonando.parar(); return; }
   const S = D.secretos.sonidera;
   if (!Son.on || !Son.iniciar()) { aviso('🔇 Prende el sonido arriba para escuchar la bocina'); return; }
-  const B = Son.B(), beat = 60 / 92, t0 = Son.ahora() + .1, BARS = 14, fuentes = [], bus = Son.crearBus();
-  Son.usar(bus); Son.eco(beat * .75, .45);   // el eco largo de sonidero, a tiempo con la música
+  const B = Son.B(), beat = 60 / 92, BARS = 14, fuentes = [], bus = Son.crearBus();
+  // primero se "afinan" todas las cuerdas (se calculan una sola vez), y luego empieza la música
+  [110, 164.8, 82.4, 123.5].forEach(f => Son.calentar(f, .2));
+  [220, 261.6, 329.6, 207.7, 246.9].forEach(f => Son.calentar(f, .45));
+  [659.3, 587.3, 523.3, 493.9, 440, 415.3, 784].forEach(f => Son.calentar(f, .8));
+  const t0 = Son.ahora() + .25;
+  Son.eco(beat * .75, .45);   // el eco largo de sonidero, a tiempo con la música
   const toca = (b, t, v, o) => fuentes.push(Son.toca(b, t, v, o));
   // efecto de sonidero: el "rayo láser" que rebota en el eco
   const laser = (t, n = 3) => { for (let i = 0; i < n; i++) Son.tono(2400 - i * 300, t + i * .19, .05, .32, { tipo: 'triangle', desliza: 240, eco: true }); };
@@ -870,7 +880,16 @@ function cumbia(el) {
     [[0, 659.3, .5], [.5, 784, .5], [1, 659.3, .5], [1.5, 587.3, .5], [2, 523.3, .5], [2.5, 587.3, .5], [3, 659.3, 1]],
     [[0, 587.3, .5], [.5, 523.3, .5], [1, 493.9, .5], [1.5, 415.3, .5], [2, 440, 2]]
   ];
-  for (let bar = 0; bar < BARS; bar++) {
+  const timers = [];
+  // se programa compás por compás, un segundo antes de que suene, para que el celular nunca se atragante
+  let sig = 0;
+  const programar = () => {
+    Son.usar(bus);
+    while (sig < BARS && t0 + sig * 4 * beat < Son.ahora() + 1.2) compas(sig++);
+    Son.usar(null);
+    if (sig < BARS) timers.push(setTimeout(programar, 250));
+  };
+  function compas(bar) {
     const tb = t0 + bar * 4 * beat, am = bar % 2 === 0;
     for (let b = 0; b < 4; b++) {
       const t = tb + b * beat;
@@ -886,16 +905,14 @@ function cumbia(el) {
     const [r, q] = BAJO[am ? 0 : 1];
     Son.cuerda(r, tb, .6, { brillo: .2 }); Son.cuerda(q, tb + 2 * beat, .55, { brillo: .2 }); Son.cuerda(r, tb + 3.5 * beat, .4, { brillo: .2 });
     if (bar % 4 === 0) laser(tb);
-    if (bar >= 2 && bar < BARS - 2) MEL[(bar - 2) % 4].forEach(([o, f, d]) => {
-      Son.cuerda(f, tb + o * beat, .3, { brillo: .8, eco: true });       // el requinto con eco, como en los bailes
-      Son.acordeon(f, tb + o * beat, d * beat * .9, .035);              // y el teclado que lo acompaña
-    });
-    if (bar >= BARS - 2) MEL[(bar % 2)].forEach(([o, f, d]) => Son.cuerda(f, tb + o * beat, .32, { brillo: .8, eco: true }));
+    if (bar >= 2 && bar < BARS - 2) MEL[(bar - 2) % 4].forEach(([o, f]) => Son.cuerda(f, tb + o * beat, .34, { brillo: .8, eco: true }));   // el requinto con eco, como en los bailes
+    if (bar >= BARS - 2) MEL[(bar % 2)].forEach(([o, f]) => Son.cuerda(f, tb + o * beat, .32, { brillo: .8, eco: true }));
+    if (bar === BARS - 1) { const fin = tb + 4 * beat; toca(B.bombo, fin, .9); Son.cuerda(110, fin, .7, { brillo: .2 }); Son.cuerda(440, fin, .35, { brillo: .8, eco: true }); laser(fin, 4); }
   }
-  const fin = t0 + BARS * 4 * beat; toca(B.bombo, fin, .9); Son.cuerda(110, fin, .7, { brillo: .2 }); Son.cuerda(440, fin, .35, { brillo: .8, eco: true }); laser(fin, 4);
+  const fin = t0 + BARS * 4 * beat;
+  programar();
   escena.classList.add('fiesta');
   aviso('🔊 ¡Súbele! (si no suena, quita el modo silencio)', 3500);
-  const timers = [];
   timers.push(setTimeout(() => burbuja(el, S.burbuja, 6000), 2 * 4 * beat * 1000));
   if (!hallados.has('sonidera')) timers.push(setTimeout(() => ganarSecreto('sonidera'), 6 * 4 * beat * 1000));
   Son.usar(null);
