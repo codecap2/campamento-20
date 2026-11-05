@@ -185,7 +185,8 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 @keyframes entra{from{opacity:0;transform:translateY(14px) scale(.96)}}
 .dlg{padding:26px 22px 22px;text-align:center;display:grid;gap:12px;justify-items:center}
 .dlg h2{font-family:var(--fuente-titulo);font-weight:600;font-size:26px;line-height:1.2}
-.dlg p{line-height:1.55;color:var(--texto-suave)}
+.dlg p{line-height:1.55;color:var(--texto-suave);text-wrap:pretty}
+.dlg h2,.dlg .etiqueta,.pagina b,.pagina p,.carta-in p{text-wrap:balance}
 .dlg p b{color:var(--texto)}
 .etiqueta{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--oro)}
 .fecha{font-family:var(--fuente-mano);font-size:24px;color:var(--lila)}
@@ -442,7 +443,7 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 
 <noscript><p style="position:fixed;inset:auto 0 20px;text-align:center">Activa JavaScript para entrar al campamento 🏕️</p></noscript>
 
-<script src="datos.js?v=5"></script>
+<script src="datos.js?v=6"></script>
 <script>
 (() => {
 'use strict';
