@@ -625,7 +625,7 @@ function abrirCarta() {
     } else {
       cin.innerHTML = `${parche('honor', P.honor)}<p class="felicidades">${P.felicidades} 💜</p><p class="firma">— ${P.firma}</p>
         <p id="respuesta" aria-live="polite"></p>
-        <div class="acciones"><button class="boton" id="regano">${P.reganos[0][0]}</button><button class="boton sec" id="volver">Volver a la playa</button></div>`;
+        <div class="acciones"><button class="boton" id="regano">${P.reganos[0][0]}</button><button class="boton sec" id="presumir">Presumir mi campamento ✨</button><button class="boton sec" id="volver">Volver a la playa</button></div>`;
       florecer();
       let r = 0;
       $('#regano').addEventListener('click', ev => {
@@ -633,6 +633,13 @@ function abrirCarta() {
         r = (r + 1) % P.reganos.length; ev.currentTarget.textContent = P.reganos[r][0];
       });
       $('#volver').addEventListener('click', () => carta.close());
+      $('#presumir').addEventListener('click', async () => {
+        const url = location.href.split('#')[0], txt = 'Miren lo que me regalaron por mis 20 🥹🏕️';
+        try {
+          if (navigator.share) await navigator.share({ title: 'Campamento 20', text: txt, url });
+          else { await navigator.clipboard.writeText(txt + ' ' + url); $('#respuesta').textContent = '¡Link copiado! Pégalo donde quieras ✨'; }
+        } catch (e) {}
+      });
       return;
     }
     $('#sig').addEventListener('click', mostrar); $('#sig').focus({ preventScroll: true });
