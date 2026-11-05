@@ -210,8 +210,13 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 .banda .parche{width:78px;height:78px}
 .vacio .parche{filter:grayscale(1) brightness(.45);opacity:.6}
 .separador{width:100%;border-top:1px dashed var(--borde);margin:6px 0 2px}
-.morse-codigo{font-size:28px;letter-spacing:.06em;font-weight:900;color:var(--oro);white-space:pre}
-.morse-tabla{display:grid;grid-template-columns:repeat(4,1fr);gap:4px 10px;font-size:13px;color:var(--texto-suave);font-variant-numeric:tabular-nums;width:100%;text-align:left}
+.ml{white-space:nowrap;display:inline-block;margin:0 5px}
+.morse-codigo{font-size:22px;line-height:2;font-weight:900;color:var(--oro);white-space:normal;word-spacing:10px;max-width:100%}
+.mp,.mr{display:inline-block;height:7px;border-radius:4px;background:currentColor;margin:0 2px;vertical-align:middle}
+.mp{width:7px}.mr{width:20px}
+.morse-codigo .mp{width:11px;height:11px;border-radius:6px}.morse-codigo .mr{width:30px;height:11px;border-radius:6px}
+.morse-tabla span{color:var(--lila);white-space:nowrap}
+.morse-tabla{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:4px 10px;font-size:13px;color:var(--texto-suave);font-variant-numeric:tabular-nums;width:100%;text-align:left}
 .morse-tabla b{color:var(--texto);display:inline-block;width:1.1em}
 
 /* ---------- CARTA ---------- */
@@ -437,7 +442,7 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 
 <noscript><p style="position:fixed;inset:auto 0 20px;text-align:center">Activa JavaScript para entrar al campamento 🏕️</p></noscript>
 
-<script src="datos.js?v=4"></script>
+<script src="datos.js?v=5"></script>
 <script>
 (() => {
 'use strict';
@@ -660,12 +665,14 @@ async function coco(el) {
   ganarSecreto('coco');
 }
 const TABLA = 'A·— B—··· C—·—· D—·· E· F··—· G——· H···· I·· J·——— K—·— L·—·· M—— N—· O——— P·——· Q——·— R·—· S··· T— U··— V···— W·—— X—··— Y—·—— Z——··';
+const morseHTML = s => s.replace(/·/g, '<i class="mp"></i>').replace(/—/g, '<i class="mr"></i>');
+const morseCodigo = s => s.trim().split(/ {4,}/).map(p => p.trim().split(/ +/).map(l => `<span class="ml">${morseHTML(l)}</span>`).join(" ")).join(" <b>/</b> ");
 function morse() {
   const S = D.secretos.morse;
   if (hallados.has('morse')) return ganarSecreto('morse', S.exito);
   abrir(`<p class="etiqueta">Algo parpadea a lo lejos…</p><h2 id="dlg-titulo">${S.titulo}</h2><p>${S.texto}</p>
-    <p class="morse-codigo" aria-label="raya, punto, espacio, punto raya, raya raya, raya raya raya">${S.codigo}</p>
-    <div class="morse-tabla">${TABLA.split(' ').map(x => `<span><b>${x[0]}</b> ${x.slice(1)}</span>`).join('')}</div>
+    <p class="morse-codigo" aria-label="raya, punto, espacio, punto raya, raya raya, raya raya raya">${morseCodigo(S.codigo)}</p>
+    <div class="morse-tabla">${TABLA.split(' ').map(x => `<span><b>${x[0]}</b> ${morseHTML(x.slice(1))}</span>`).join('')}</div>
     <form id="f-morse" class="clave" style="margin-top:6px;width:100%"><label for="r-morse" class="solo-lector">Tu respuesta</label>
     <input class="campo" id="r-morse" autocapitalize="none" spellcheck="false" placeholder="¿Qué dice el faro?" required>
     <button class="boton" type="submit">Descifrar 🔦</button></form>
