@@ -382,7 +382,7 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 
 <noscript><p style="position:fixed;inset:auto 0 20px;text-align:center">Activa JavaScript para entrar al campamento 🏕️</p></noscript>
 
-<script src="datos.js?v=2"></script>
+<script src="datos.js?v=3"></script>
 <script>
 (() => {
 'use strict';
@@ -627,7 +627,7 @@ copo.addEventListener('animationend', e => { if (e.animationName === 'copo') cop
 /* Motor de sonido: todo hecho con código, como en Olimpo. Sonidos pregrabados en memoria (rápidos en celular),
    cuerdas pulsadas reales (Karplus-Strong), güiro hecho de raspaditos, cencerro con armónicos de metal y eco de sala. */
 const Son = (() => {
-  let ac = null, maestro, sala, ecoIn, amb, on = true, B = {};
+  let ac = null, maestro, sala, ecoIn, vueltaEco, amb, on = true, B = {};
   const sr = () => ac.sampleRate;
   function hacer(seg, fn) { const n = Math.floor(sr() * seg), b = ac.createBuffer(1, n, sr()), d = b.getChannelData(0); fn(d, sr()); return b; }
   function iniciar() {
@@ -642,7 +642,7 @@ const Son = (() => {
       sala.buffer = (() => { const n = Math.floor(sr() * 1.6), b = ac.createBuffer(2, n, sr()); for (let k = 0; k < 2; k++) { const d = b.getChannelData(k); for (let j = 0; j < n; j++) d[j] = (Math.random() * 2 - 1) * Math.pow(1 - j / n, 3.2); } return b; })();
       const sg = ac.createGain(); sg.gain.value = .25; sala.connect(sg); sg.connect(maestro);
       ecoIn = ac.createDelay(1.5); ecoIn.delayTime.value = .47;                       // el eco de sonidero
-      const vuelta = ac.createGain(), apaga = ac.createBiquadFilter(); vuelta.gain.value = .38; apaga.type = 'lowpass'; apaga.frequency.value = 2400;
+      const vuelta = ac.createGain(), apaga = ac.createBiquadFilter(); vuelta.gain.value = .38; vueltaEco = vuelta; apaga.type = 'lowpass'; apaga.frequency.value = 2400;
       ecoIn.connect(apaga); apaga.connect(vuelta); vuelta.connect(ecoIn); apaga.connect(maestro); apaga.connect(sala);
       // ruidos base
       B.cafe = hacer(4, d => { let u = 0; for (let i = 0; i < d.length; i++) { u = (u + .02 * (Math.random() * 2 - 1)) / 1.02; d[i] = u * 3.5; } });
@@ -661,6 +661,8 @@ const Son = (() => {
       B.campana = hacer(.4, (d, r) => { for (let i = 0; i < d.length; i++) { const t = i / r, a = Math.min(1, t / .002), e = a * (Math.exp(-t / .06) * .75 + Math.exp(-t / .22) * .25); d[i] = (Math.sin(2 * Math.PI * 562 * t) * .45 + Math.sin(2 * Math.PI * 845 * t) * .35 + Math.sin(2 * Math.PI * 1551 * t) * .12 + Math.sin(2 * Math.PI * 2330 * t) * .05) * e * .8; } });
       // tambora: golpe grave que baja de tono + parche
       B.bombo = hacer(.4, (d, r) => { let ph = 0; for (let i = 0; i < d.length; i++) { const t = i / r, f = 45 + 95 * Math.exp(-t / .04); ph += 2 * Math.PI * f / r; d[i] = Math.sin(ph) * Math.exp(-t / .13) + (Math.random() * 2 - 1) * Math.exp(-t / .006) * .25; } });
+      const conga = f0 => hacer(.35, (d, r) => { let ph = 0; for (let i = 0; i < d.length; i++) { const t = i / r, f = f0 + f0 * .35 * Math.exp(-t / .012); ph += 2 * Math.PI * f / r; d[i] = Math.sin(ph) * Math.exp(-t / .1) * Math.min(1, i / 20) + (Math.random() * 2 - 1) * Math.exp(-t / .003) * .18; } });
+      B.congaA = conga(330); B.congaB = conga(220);
       B.click = hacer(.014, (d, r) => { let lp = 0; for (let i = 0; i < d.length; i++) { lp += ((Math.random() * 2 - 1) * Math.exp(-i / (r * .0018)) - lp) * .35; d[i] = lp * 1.6 * Math.min(1, i / 8); } });
       B.bola = hacer(.12, (d, r) => { for (let i = 0; i < d.length; i++) { const t = i / r; d[i] = (Math.sin(2 * Math.PI * 2350 * t) * .6 + Math.sin(2 * Math.PI * 3900 * t) * .3) * Math.exp(-t / .012) + (Math.random() * 2 - 1) * Math.exp(-t / .002) * .5; } });
       return true;
@@ -756,7 +758,7 @@ const Son = (() => {
     pagina: () => { const t = ahora(); soplo(t, .35, 2500, 4500, .08, 'bandpass', .8, B.blanco); }
   };
   return {
-    iniciar, ambiente, ahora, toca, cuerda, acordeon, tono, crearBus, usar: b => { dest = b; }, B: () => B, ok: () => !!ac && on,
+    iniciar, ambiente, ahora, toca, cuerda, acordeon, tono, crearBus, eco: (t, fb) => { ecoIn.delayTime.setValueAtTime(t, ac.currentTime); vueltaEco.gain.setValueAtTime(fb, ac.currentTime); }, usar: b => { dest = b; }, B: () => B, ok: () => !!ac && on,
     sfx(n) { if (!on || !iniciar()) return; try { efectos[n] && efectos[n](); } catch (e) {} },
     alternar() { on = !on; if (ac) { maestro.gain.setTargetAtTime(on ? .7 : 0, ac.currentTime, .05); if (on) ac.resume(); } return on; },
     get on() { return on; }
@@ -768,11 +770,14 @@ function cumbia(el) {
   if (sonando) { sonando.parar(); return; }
   const S = D.secretos.sonidera;
   if (!Son.on || !Son.iniciar()) { aviso('🔇 Prende el sonido arriba para escuchar la bocina'); return; }
-  const B = Son.B(), beat = 60 / 98, t0 = Son.ahora() + .1, BARS = 12, fuentes = [], bus = Son.crearBus();
-  Son.usar(bus);
+  const B = Son.B(), beat = 60 / 92, t0 = Son.ahora() + .1, BARS = 14, fuentes = [], bus = Son.crearBus();
+  Son.usar(bus); Son.eco(beat * .75, .45);   // el eco largo de sonidero, a tiempo con la música
   const toca = (b, t, v, o) => fuentes.push(Son.toca(b, t, v, o));
+  // efecto de sonidero: el "rayo láser" que rebota en el eco
+  const laser = (t, n = 3) => { for (let i = 0; i < n; i++) Son.tono(2400 - i * 300, t + i * .19, .05, .32, { tipo: 'triangle', desliza: 240, eco: true }); };
   // progresión clásica de cumbia: La menor y Mi
   const BAJO = [[110, 164.8], [82.4, 123.5]];
+  const ACORDES = [[220, 261.6, 329.6], [207.7, 246.9, 329.6]];
   const MEL = [
     [[0, 659.3, .5], [.5, 587.3, .5], [1, 523.3, .5], [1.5, 493.9, .5], [2, 523.3, 1], [3, 440, 1]],
     [[0, 493.9, .5], [.5, 523.3, .5], [1, 587.3, .5], [1.5, 523.3, .5], [2, 493.9, 1], [3, 415.3, 1]],
@@ -784,15 +789,24 @@ function cumbia(el) {
     for (let b = 0; b < 4; b++) {
       const t = tb + b * beat;
       toca(B.guiroL, t, .5, { seco: true }); toca(B.guiroC, t + beat * .5, .35, { seco: true }); toca(B.guiroC, t + beat * .75, .35, { seco: true });
-      toca(B.campana, t + beat * .5, .32);
+      toca(B.campana, t + beat * .5, .26);
+      // guitarra rítmica: el "chiqui-chiqui" del contratiempo
+      ACORDES[am ? 0 : 1].forEach((f, k) => Son.cuerda(f, t + beat * .5 + k * .012, .09, { brillo: .45 }));
     }
-    toca(B.bombo, tb, .7); toca(B.bombo, tb + 2 * beat, .7); toca(B.bombo, tb + 3.5 * beat, .45, { rate: 1.15 });
+    // tumbadoras: el tumbao que hace bailar
+    toca(B.congaA, tb + 1.5 * beat, .4); toca(B.congaB, tb + 2 * beat, .35); toca(B.congaA, tb + 3.5 * beat, .4); toca(B.congaB, tb + 3.75 * beat, .3);
+    if (bar % 4 === 3) [0, .25, .5, .75].forEach((o, i) => toca(i % 2 ? B.congaB : B.congaA, tb + (3 + o) * beat, .3 + i * .05, { rate: 1.25 }));   // redoble antes de cambiar
+    toca(B.bombo, tb, .7); toca(B.bombo, tb + 2 * beat, .7);
     const [r, q] = BAJO[am ? 0 : 1];
-    Son.cuerda(r, tb, .6, { brillo: .2 }); Son.cuerda(q, tb + 2 * beat, .55, { brillo: .2 }); Son.cuerda(r, tb + 3.5 * beat, .45, { brillo: .2 });
-    if (bar >= 2 && bar < BARS - 2) MEL[(bar - 2) % 4].forEach(([o, f, d]) => Son.acordeon(f, tb + o * beat, d * beat * .92, .07));
-    if (bar >= BARS - 2) MEL[(bar % 2)].forEach(([o, f, d]) => Son.cuerda(f, tb + o * beat, .4, { brillo: .65, eco: true }));   // el requinto cierra con eco
+    Son.cuerda(r, tb, .6, { brillo: .2 }); Son.cuerda(q, tb + 2 * beat, .55, { brillo: .2 }); Son.cuerda(r, tb + 3.5 * beat, .4, { brillo: .2 });
+    if (bar % 4 === 0) laser(tb);
+    if (bar >= 2 && bar < BARS - 2) MEL[(bar - 2) % 4].forEach(([o, f, d]) => {
+      Son.cuerda(f, tb + o * beat, .3, { brillo: .8, eco: true });       // el requinto con eco, como en los bailes
+      Son.acordeon(f, tb + o * beat, d * beat * .9, .035);              // y el teclado que lo acompaña
+    });
+    if (bar >= BARS - 2) MEL[(bar % 2)].forEach(([o, f, d]) => Son.cuerda(f, tb + o * beat, .32, { brillo: .8, eco: true }));
   }
-  const fin = t0 + BARS * 4 * beat; toca(B.bombo, fin, 1); Son.cuerda(110, fin, 1, { brillo: .2 }); Son.acordeon(440, fin, beat * 2, .08);
+  const fin = t0 + BARS * 4 * beat; toca(B.bombo, fin, .9); Son.cuerda(110, fin, .7, { brillo: .2 }); Son.cuerda(440, fin, .35, { brillo: .8, eco: true }); laser(fin, 4);
   escena.classList.add('fiesta');
   aviso('🔊 ¡Súbele! (si no suena, quita el modo silencio)', 3500);
   const timers = [];
