@@ -129,7 +129,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @keyframes camina{0%,100%{left:8%}45%,55%{left:34%}}
 #o-cangrejo svg{animation:patitas .5s steps(2) infinite}
 @keyframes patitas{50%{transform:translateY(-2px) rotate(2deg)}}
-#burbuja{position:absolute;z-index:5;max-width:220px;padding:10px 14px;border-radius:16px;background:var(--crema);color:#2a1a55;font-weight:800;font-size:15px;box-shadow:var(--sombra);opacity:0;scale:.9;transition:opacity .2s,scale .2s var(--ease-out);pointer-events:none}
+#burbuja{position:absolute;z-index:5;max-width:min(260px,80vw);text-align:center;text-wrap:balance;line-height:1.35;padding:10px 14px;border-radius:16px;background:var(--crema);color:#2a1a55;font-weight:800;font-size:15px;box-shadow:var(--sombra);opacity:0;scale:.9;transition:opacity .2s,scale .2s var(--ease-out);pointer-events:none}
 #burbuja.ve{opacity:1;scale:1}
 
 #o-bocina{left:66%;bottom:.5%;width:clamp(40px,9vmin,54px)}
@@ -154,7 +154,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .pill{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;background:rgba(10,16,60,.7);border:1px solid var(--borde);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-weight:800;font-size:15px;transition:transform .16s var(--ease-out),background .2s}
 .pill:active{transform:scale(.96)}
 .pill:hover{background:rgba(35,70,200,.55)}
-#toast{position:fixed;top:calc(max(14px,env(safe-area-inset-top)) + 58px);left:50%;translate:-50% -8px;z-index:11;width:min(92vw,420px);padding:12px 18px;border-radius:16px;background:var(--vidrio);border:1px solid var(--borde);text-align:center;font-weight:700;line-height:1.4;opacity:0;pointer-events:none;transition:opacity .25s,translate .25s var(--ease-out)}
+#toast{position:fixed;top:calc(max(14px,env(safe-area-inset-top)) + 58px);left:50%;translate:-50% -8px;z-index:11;width:min(92vw,420px);padding:12px 18px;border-radius:16px;background:var(--vidrio);border:1px solid var(--borde);text-align:center;text-wrap:balance;font-weight:700;line-height:1.4;opacity:0;pointer-events:none;transition:opacity .25s,translate .25s var(--ease-out)}
 #toast.ve{opacity:1;translate:-50% 0}
 
 /* ---------- CANDADO ---------- */
@@ -687,7 +687,7 @@ function morse() {
 }
 function burbuja(el, txt, ms = 2600) {
   const b = $('#burbuja'), r = el.getBoundingClientRect();
-  b.textContent = txt;
+  b.textContent = txt.replace(/ (S+)$/, "00a0$1");   // el emoji nunca se queda solo en otro renglón
   b.classList.add('ve');
   const h = b.offsetHeight;
   b.style.left = Math.max(8, Math.min(innerWidth - b.offsetWidth - 8, r.left + r.width / 2 - b.offsetWidth / 2)) + 'px';
