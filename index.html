@@ -102,7 +102,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .palmera > svg{height:100%;width:100%}
 .palmera .hojas{transform-origin:118px 92px;animation:viento 6s ease-in-out infinite}
 @keyframes viento{50%{transform:rotate(3deg)}}
-#o-coco{position:absolute;left:52%;top:20%;width:24%;pointer-events:auto}
+#o-coco{position:absolute;left:47%;top:22.5%;width:13%;min-width:44px;min-height:44px;pointer-events:auto}
 #o-coco.cae{animation:cae .9s cubic-bezier(.5,0,.75,0) forwards}
 @keyframes cae{to{translate:10% 330%;rotate:200deg}}
 #o-coco.caido{translate:10% 330%;rotate:200deg}
@@ -113,9 +113,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #o-flor.crece svg{animation:crece .8s var(--ease-rebote)}
 @keyframes crece{0%{transform:scale(1)}40%{transform:scale(1.45) rotate(-8deg)}100%{transform:scale(1)}}
 #o-bola{left:63%;bottom:24%;width:clamp(30px,6.5vmin,42px);animation:rueda 5s ease-in-out infinite}
-@keyframes rueda{0%,100%{translate:0 0;rotate:0deg}50%{translate:14px 2px;rotate:90deg}}
+@keyframes rueda{0%,100%{translate:0 0}50%{translate:14px 2px}}
 #o-bola.gira{animation:gira .9s var(--ease-out)}
-@keyframes gira{to{rotate:720deg;translate:0 -30px}}
+@keyframes gira{40%{translate:0 -34px}70%{translate:0 0}85%{translate:0 -8px}100%{translate:0 0}}
 
 #o-fogata{left:50%;bottom:4%;width:clamp(84px,21vmin,150px);translate:-50% 0}
 .llama{transform-origin:50% 100%;animation:fuego var(--f) ease-in-out infinite alternate}
@@ -132,7 +132,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #burbuja{position:absolute;z-index:5;max-width:220px;padding:10px 14px;border-radius:16px;background:var(--crema);color:#2a1a55;font-weight:800;font-size:15px;box-shadow:var(--sombra);opacity:0;scale:.9;transition:opacity .2s,scale .2s var(--ease-out);pointer-events:none}
 #burbuja.ve{opacity:1;scale:1}
 
-#o-bocina{left:60%;bottom:1%;width:clamp(44px,10vmin,62px)}
+#o-bocina{left:66%;bottom:.5%;width:clamp(40px,9vmin,54px)}
 #o-bocina svg{transform-origin:50% 100%}
 .luces{position:absolute;inset:-60%;pointer-events:none;opacity:0;transition:opacity .6s;mix-blend-mode:screen;
   background:conic-gradient(from 0deg at 50% 50%,rgba(255,0,170,0),rgba(255,0,170,.28),rgba(0,210,255,0) 25%,rgba(0,210,255,.28) 40%,rgba(255,220,0,0) 55%,rgba(255,220,0,.25) 70%,rgba(255,0,170,0) 85%)}
@@ -244,6 +244,11 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 .pagina .polaroid img{max-height:26dvh}
 .pagina.final{min-height:160px;place-content:center}
 #o-tienda .puerta{transition:fill .5s}
+#o-tienda .luz-tienda{opacity:0;transition:opacity .5s}
+#o-tienda.prendida .luz-tienda{opacity:1}
+#o-tienda .bandera{transform-origin:110px 10px;animation:ondea 2.4s ease-in-out infinite}
+@keyframes ondea{50%{transform:scaleX(.85) skewY(4deg)}}
+.islas{position:absolute;left:0;right:0;top:calc(58% - 3vh);width:100%;height:3vh;pointer-events:none}
 #o-tienda.prendida .puerta{fill:#ffc77a}
 #o-tienda.prendida svg{filter:drop-shadow(0 0 24px rgba(255,180,90,.8)) brightness(1.12)}
 .solo-lector{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -257,6 +262,34 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 <body>
 
 <main id="escena" inert>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+    <linearGradient id="g-tela-luz" x1="0" x2="1"><stop offset="0" stop-color="#7d98ff"/><stop offset=".35" stop-color="#3f62e6"/><stop offset="1" stop-color="#2346c8"/></linearGradient>
+    <linearGradient id="g-tela-sombra" x1="0" x2="1"><stop offset="0" stop-color="#1d35a6"/><stop offset="1" stop-color="#0e1a63"/></linearGradient>
+    <linearGradient id="g-solapa" x1="0" x2="1"><stop offset="0" stop-color="#a873f0"/><stop offset="1" stop-color="#5a28a6"/></linearGradient>
+    <radialGradient id="g-luzint" cx=".5" cy=".9" r=".8"><stop offset="0" stop-color="#fff1c2"/><stop offset=".45" stop-color="#ffb15e"/><stop offset="1" stop-color="#ff8a3d" stop-opacity=".35"/></radialGradient>
+    <radialGradient id="g-bola" cx=".34" cy=".3" r=".8"><stop offset="0" stop-color="#7cf0b0"/><stop offset=".35" stop-color="#22a85c"/><stop offset="1" stop-color="#063d20"/></radialGradient>
+    <radialGradient id="g-marfil" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9d4c4"/></radialGradient>
+    <radialGradient id="g-farol" cx=".5" cy=".55" r=".62"><stop offset="0" stop-color="#ffe7a0"/><stop offset=".3" stop-color="#ff8a5a"/><stop offset=".75" stop-color="#e0383e"/><stop offset="1" stop-color="#8c1222"/></radialGradient>
+    <linearGradient id="g-oro" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#b8862a"/></linearGradient>
+    <radialGradient id="g-halo"><stop offset="0" stop-color="#ff8a5a" stop-opacity=".5"/><stop offset="1" stop-color="#ff8a5a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="g-halo-blanco"><stop offset="0" stop-color="#fff6d6" stop-opacity=".55"/><stop offset="1" stop-color="#fff6d6" stop-opacity="0"/></radialGradient>
+    <linearGradient id="g-llama1" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e8321c"/><stop offset=".55" stop-color="#ff6a2a"/><stop offset="1" stop-color="#ff9a3a" stop-opacity=".85"/></linearGradient>
+    <linearGradient id="g-llama2" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff8a1e"/><stop offset="1" stop-color="#ffd25a"/></linearGradient>
+    <linearGradient id="g-llama3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#fffbe9"/></linearGradient>
+    <linearGradient id="g-tronco" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#a06a3c"/><stop offset=".5" stop-color="#6b4022"/><stop offset="1" stop-color="#341c0e"/></linearGradient>
+    <radialGradient id="g-piedra" cx=".45" cy=".25" r=".8"><stop offset="0" stop-color="#b59a9a"/><stop offset=".4" stop-color="#5d5384"/><stop offset="1" stop-color="#231d48"/></radialGradient>
+    <radialGradient id="g-luna" cx=".36" cy=".33" r=".75"><stop offset="0" stop-color="#fffdf6"/><stop offset=".65" stop-color="#ebe5fc"/><stop offset="1" stop-color="#bdb2ec"/></radialGradient>
+    <linearGradient id="g-palma" x1="0" x2="1"><stop offset="0" stop-color="#0b0827"/><stop offset=".7" stop-color="#17124a"/><stop offset="1" stop-color="#3d3196"/></linearGradient>
+    <linearGradient id="g-hoja" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2e2a86"/><stop offset="1" stop-color="#0c0a2c"/></linearGradient>
+    <radialGradient id="g-coco" cx=".65" cy=".3" r=".8"><stop offset="0" stop-color="#7a5a9e"/><stop offset=".45" stop-color="#3a2650"/><stop offset="1" stop-color="#160c22"/></radialGradient>
+    <radialGradient id="g-cangrejo" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#ff9a6a"/><stop offset=".6" stop-color="#e2502e"/><stop offset="1" stop-color="#9c2414"/></radialGradient>
+    <linearGradient id="g-madera" x1="0" x2="1"><stop offset="0" stop-color="#4b2a86"/><stop offset=".5" stop-color="#6b3fb0"/><stop offset="1" stop-color="#2a1660"/></linearGradient>
+    <radialGradient id="g-cono" cx=".42" cy=".38" r=".7"><stop offset="0" stop-color="#5a5a7e"/><stop offset=".55" stop-color="#17172e"/><stop offset="1" stop-color="#050510"/></radialGradient>
+    <linearGradient id="g-faro" x1="0" x2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#a99ee0"/></linearGradient>
+    <linearGradient id="g-roca" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2c2470"/><stop offset="1" stop-color="#120e3a"/></linearGradient>
+    <linearGradient id="g-vidrio" x1="0" x2="1"><stop offset="0" stop-color="rgba(140,235,205,.75)"/><stop offset=".5" stop-color="rgba(70,170,150,.55)"/><stop offset="1" stop-color="rgba(30,110,100,.7)"/></linearGradient>
+    <linearGradient id="g-tallo" x1="0" x2="1"><stop offset="0" stop-color="#4fb06e"/><stop offset="1" stop-color="#1e6a3e"/></linearGradient>
+  </defs></svg>
   <div id="estrellas" class="capa" aria-hidden="true"></div>
   <div class="fugaz" aria-hidden="true"></div>
   <div class="luna-halo" aria-hidden="true"></div>
@@ -267,17 +300,23 @@ dialog[open]{animation:entra .32s var(--ease-out)}
   </svg>
 
   <button class="obj" id="o-estrella" data-obj="estrella" aria-label="Una estrella que brilla más que las demás">
-    <svg viewBox="-30 -30 60 60"><g fill="#fff6d6"><path d="M0 -26 L4 -4 L26 0 L4 4 L0 26 L-4 4 L-26 0 L-4 -4Z"/><circle r="5"/></g><circle r="11" fill="rgba(255,240,190,.35)"/></svg>
+    <svg viewBox="-30 -30 60 60"><circle r="22" fill="url(#g-halo-blanco)"/><g fill="#fff6d6"><path d="M0 -27 Q2 -2 27 0 Q2 2 0 27 Q-2 2 -27 0 Q-2 -2 0 -27Z"/><path d="M0 -12 Q1 -1 12 0 Q1 1 0 12 Q-1 1 -12 0 Q-1 -1 0 -12Z" transform="rotate(45)" opacity=".8"/><circle r="3.6" fill="#fff"/></g></svg>
   </button>
 
   <button class="obj" id="o-luna" data-obj="luna" aria-label="La luna">
-    <svg viewBox="0 0 100 100"><defs><radialGradient id="gl" cx="40%" cy="35%"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#d9d2f5"/></radialGradient></defs>
-      <circle cx="50" cy="50" r="44" fill="url(#gl)"/><g fill="#bfb5e6" opacity=".7"><circle cx="34" cy="38" r="8"/><circle cx="62" cy="62" r="11"/><circle cx="64" cy="30" r="5"/><circle cx="36" cy="68" r="4"/></g></svg>
+    <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="url(#g-luna)"/>
+      <g fill="#c9bff0" opacity=".55"><ellipse cx="34" cy="38" rx="9" ry="8"/><ellipse cx="62" cy="63" rx="12" ry="10"/><circle cx="66" cy="31" r="5"/><circle cx="35" cy="69" r="4"/><circle cx="50" cy="48" r="3"/></g>
+      <g fill="#fff" opacity=".35"><ellipse cx="33" cy="36" rx="7" ry="5"/><ellipse cx="61" cy="61" rx="9" ry="6"/></g>
+      <path d="M50 6 A44 44 0 0 1 50 94 A36 44 0 0 0 50 6Z" fill="#6b5ab8" opacity=".14"/></svg>
   </button>
   <svg id="cohete" viewBox="-20 -20 40 40" aria-hidden="true"><path d="M0,-17 C7,-10 8,0 6,8 L-6,8 C-8,0 -7,-10 0,-17Z" fill="#eef0ff"/><circle cy="-4" r="3.5" fill="#2346c8" stroke="#f2c14e"/><path d="M-6,2 L-11,10 L-6,8Z M6,2 L11,10 L6,8Z" fill="#e0383e"/><path d="M-4,9 Q0,22 4,9Z" fill="#f2c14e"/></svg>
 
   <button class="obj" id="o-farol" data-obj="farol" aria-label="Un farolito rojo flotando en el cielo">
-    <svg viewBox="-20 -26 40 56"><rect x="-6" y="-24" width="12" height="5" rx="1.5" fill="#f2c14e"/><ellipse class="luz-farol" rx="22" ry="20" fill="rgba(255,90,70,.25)"/><ellipse rx="16" ry="15" fill="#e0383e"/><path d="M-8,-13 Q-13,0 -8,13 M0,-15 V15 M8,-13 Q13,0 8,13" stroke="#a51f2a" stroke-width="1.6" fill="none"/><ellipse rx="6" ry="9" fill="#ff8a60" opacity=".55"/><rect x="-6" y="13" width="12" height="5" rx="1.5" fill="#f2c14e"/><path d="M0 18 V28" stroke="#f2c14e" stroke-width="2.4"/></svg>
+    <svg viewBox="-26 -30 52 64"><circle class="luz-farol" r="26" fill="url(#g-halo)"/>
+      <rect x="-7" y="-24" width="14" height="5" rx="2" fill="url(#g-oro)"/><ellipse rx="17" ry="15.5" fill="url(#g-farol)"/>
+      <g stroke="#8c1222" stroke-width="1.1" fill="none" opacity=".55"><path d="M-11,-11.5 Q-17,0 -11,11.5 M-5,-15 Q-8,0 -5,15 M5,-15 Q8,0 5,15 M11,-11.5 Q17,0 11,11.5"/></g>
+      <ellipse cx="-6" cy="-7" rx="4" ry="6" fill="#fff" opacity=".18"/>
+      <rect x="-7" y="14" width="14" height="5" rx="2" fill="url(#g-oro)"/><g stroke="#e8b84a" stroke-width="1.2" stroke-linecap="round"><path d="M-2 19 V31 M0 19 V32 M2 19 V31"/></g></svg>
   </button>
 
   <div class="mar" aria-hidden="true">
@@ -287,65 +326,81 @@ dialog[open]{animation:entra .32s var(--ease-out)}
     <div class="ola" style="top:48%;--v:11s;opacity:.6"><svg viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0 20 Q75 4 150 20 T300 20 T450 20 T600 20 T750 20 T900 20 T1050 20 T1200 20 V40 H0Z" fill="#3247c0"/></svg></div>
   </div>
 
+  <svg class="islas" viewBox="0 0 400 30" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 Q30 18 60 24 Q90 10 130 22 Q160 26 185 30Z M230 30 Q262 21 292 25 Q330 13 372 24 L400 30Z" fill="#1c1660"/></svg>
   <div class="haz" id="haz" aria-hidden="true"></div>
   <button class="obj" id="o-faro" data-obj="morse" aria-label="Un faro a lo lejos que parpadea">
-    <svg viewBox="0 0 30 60"><path d="M3 60 Q15 52 27 60Z" fill="#241a5e"/><path d="M9 56 L11 18 H19 L21 56Z" fill="#eef0ff"/><path d="M9.7 44 H20.3 L20.6 50 H9.4Z M10.4 30 H19.6 L19.9 36 H10.1Z" fill="#8e4fd6"/><rect x="10" y="10" width="10" height="8" rx="1" fill="#2a1f6e"/><rect id="luz-faro" x="11.5" y="11.5" width="7" height="5" fill="#ffe7a3"/><path d="M9 10 L15 4 L21 10Z" fill="#e0383e"/></svg>
+    <svg viewBox="0 0 30 62"><path d="M0 62 Q4 52 10 54 Q15 49 21 53 Q27 52 30 62Z" fill="url(#g-roca)"/><path d="M10 54 Q15 49 21 53" stroke="#5a4ab8" stroke-width="1" fill="none" opacity=".7"/>
+      <path d="M9 54 L11 18 H19 L21 54Z" fill="url(#g-faro)"/><path d="M9.7 43 H20.3 L20.6 48 H9.4Z M10.4 30 H19.6 L19.9 35 H10.1Z" fill="#8e4fd6"/>
+      <rect x="8.5" y="16.5" width="13" height="2.5" rx="1" fill="#2a1f6e"/><rect x="10" y="9" width="10" height="8" rx="1" fill="#1a1450"/><rect id="luz-faro" x="11.2" y="10.2" width="7.6" height="5.6" rx="1" fill="#ffe7a3"/><path d="M9 9 L15 3 L21 9Z" fill="#c62f3a"/><circle cx="15" cy="2.5" r="1" fill="#f2c14e"/></svg>
   </button>
 
   <button class="obj" id="o-botella" data-obj="botella" aria-label="Una botella con un mensaje">
-    <svg viewBox="0 0 30 70"><rect x="11" y="2" width="8" height="8" rx="2" fill="#b07a45"/><path d="M11 10 H19 V20 Q27 26 27 36 V62 Q27 68 21 68 H9 Q3 68 3 62 V36 Q3 26 11 20Z" fill="rgba(120,220,190,.55)" stroke="rgba(220,255,240,.8)" stroke-width="1.5"/><rect x="8" y="34" width="14" height="22" rx="2" fill="#fbf4e4" transform="rotate(-6 15 45)"/><path d="M10 40 H20 M10 44 H19 M10 48 H18" stroke="#c3a6f5" stroke-width="1.2" transform="rotate(-6 15 45)"/></svg>
+    <svg viewBox="0 0 30 70"><rect x="11" y="1" width="8" height="9" rx="2" fill="#b07a45"/><path d="M11 10 H19 V20 Q27 26 27 36 V62 Q27 68 21 68 H9 Q3 68 3 62 V36 Q3 26 11 20Z" fill="url(#g-vidrio)" stroke="rgba(220,255,240,.7)" stroke-width="1.2"/><g transform="rotate(-6 15 45)"><rect x="8" y="33" width="14" height="24" rx="2" fill="#fbf4e4"/><path d="M10 39 H20 M10 43 H19 M10 47 H18 M10 51 H17" stroke="#b48cf0" stroke-width="1.1"/><path d="M8 45 H22" stroke="#e0383e" stroke-width="1.6"/></g><path d="M6 34 Q6 28 11 24 V60" stroke="#fff" stroke-width="1.6" fill="none" opacity=".45" stroke-linecap="round"/></svg>
   </button>
 
   <div class="arena" aria-hidden="true">
-    <svg viewBox="0 0 1000 300" preserveAspectRatio="none"><defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c64a8"/><stop offset="1" stop-color="#3b2a6e"/></linearGradient></defs>
+    <svg viewBox="0 0 1000 300" preserveAspectRatio="none"><defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a72b8"/><stop offset=".35" stop-color="#5e4a96"/><stop offset="1" stop-color="#2c1f5e"/></linearGradient>
+      <pattern id="p-arena" width="16" height="9" patternUnits="userSpaceOnUse"><circle cx="3" cy="2" r=".9" fill="#fff" opacity=".1"/><circle cx="11" cy="6" r=".8" fill="#0a0628" opacity=".18"/></pattern></defs>
       <path d="M0 40 Q120 10 260 34 T520 30 T780 26 T1000 36 V300 H0Z" fill="url(#ga)"/>
+      <path d="M0 40 Q120 10 260 34 T520 30 T780 26 T1000 36 V300 H0Z" fill="url(#p-arena)"/>
+      <path d="M0 46 Q120 16 260 40 T520 36 T780 32 T1000 42" fill="none" stroke="#3b2d7a" stroke-width="14" opacity=".45"/>
       <path d="M0 40 Q120 10 260 34 T520 30 T780 26 T1000 36" fill="none" stroke="rgba(230,235,255,.55)" stroke-width="4" stroke-dasharray="18 10"><animate attributeName="stroke-dashoffset" from="0" to="56" dur="3s" repeatCount="indefinite"/></path></svg>
   </div>
 
   <div class="palmera">
     <svg viewBox="0 0 200 400" aria-hidden="true">
-      <path d="M58 400 C70 300 80 200 118 92" stroke="#3a2457" stroke-width="16" fill="none" stroke-linecap="round"/>
-      <path d="M58 400 C70 300 80 200 118 92" stroke="#5a3a7a" stroke-width="16" fill="none" stroke-dasharray="3 12"/>
-      <g class="hojas" fill="#1d5a5a">
-        <path d="M118 92 C90 60 50 60 10 90 C50 76 84 80 118 92Z"/>
-        <path d="M118 92 C110 50 80 25 40 20 C76 40 100 62 118 92Z" fill="#1a4f55"/>
-        <path d="M118 92 C140 50 170 40 198 50 C166 56 140 70 118 92Z"/>
-        <path d="M118 92 C160 80 190 100 200 140 C180 112 150 100 118 92Z" fill="#1a4f55"/>
-        <path d="M118 92 C90 100 60 130 54 170 C74 134 96 112 118 92Z" fill="#17474d"/>
-        <path d="M118 92 C130 60 132 30 118 4 C136 30 136 62 118 92Z" fill="#1f6363"/>
-      </g>
-      <g fill="#5b3a22"><circle cx="108" cy="104" r="9"/><circle cx="126" cy="106" r="8"/></g>
+      <path d="M58 400 C70 300 80 200 118 92" stroke="url(#g-palma)" stroke-width="15" fill="none" stroke-linecap="round"/>
+      <path d="M58 400 C70 300 80 200 118 92" stroke="#2f2680" stroke-width="15" fill="none" stroke-dasharray="2.5 9" opacity=".8"/>
+      <path d="M64 400 C76 300 86 200 123 95" stroke="#7a6ae0" stroke-width="1.6" fill="none" opacity=".35"/>
+      <g class="hojas"></g>
+      <circle cx="108" cy="104" r="8.5" fill="url(#g-coco)"/><circle cx="125" cy="106" r="8" fill="url(#g-coco)"/>
     </svg>
     <button class="obj" id="o-coco" data-obj="coco" aria-label="Un coco en la palmera">
-      <svg viewBox="-12 -12 24 24"><circle r="10" fill="#7a4a26"/><circle cx="-3" cy="-3" r="2.5" fill="#9a6538" opacity=".7"/></svg>
+      <svg viewBox="-12 -12 24 24"><circle r="10" fill="url(#g-coco)"/><path d="M3 -8 A9 9 0 0 1 9 2" stroke="#a894ea" stroke-width="1.4" fill="none" opacity=".7"/><g fill="#0e0718" opacity=".6"><circle cx="-3" cy="-2" r="1.3"/><circle cx="2" cy="-3" r="1.3"/><circle cx="-.5" cy="2" r="1.3"/></g></svg>
     </button>
   </div>
 
   <button class="obj" id="o-flor" data-obj="flor" aria-label="Una flor en la arena">
-    <svg viewBox="-20 -30 40 60"><path d="M0 30 Q-3 12 0 0" stroke="#2f8a5a" stroke-width="3" fill="none"/><path d="M-1 18 Q-12 12 -12 4 Q-4 8 -1 16Z" fill="#2f8a5a"/><g id="petalos"></g><circle r="5.5" fill="#f2c14e"/><circle r="2.5" fill="#7a4a10"/></svg>
+    <svg viewBox="-22 -24 44 56"><path d="M0 32 Q-3 14 0 0" stroke="url(#g-tallo)" stroke-width="3" fill="none"/><path d="M-1 20 Q-14 14 -13 5 Q-4 9 -1 18Z M1 25 Q12 20 12 12 Q4 16 1 23Z" fill="url(#g-tallo)"/><g id="petalos"></g><circle r="5" fill="#4a2a0e"/><circle r="4.2" fill="none" stroke="#f2c14e" stroke-width="1.2" stroke-dasharray="1 1.4"/><circle cx="-1.5" cy="-1.5" r="1.5" fill="#fff" opacity=".25"/></svg>
   </button>
 
   <button class="obj" id="o-bola" data-obj="bola" aria-label="Algo redondo en la orilla">
-    <svg viewBox="-16 -16 32 32"><circle r="15" fill="#1f9d55"/><circle r="7" fill="#fff"/><text y="3.6" font-size="10" font-weight="900" text-anchor="middle" fill="#111" font-family="Nunito,sans-serif">6</text><ellipse cx="-6" cy="-8" rx="4.5" ry="2.6" fill="#fff" opacity=".35"/></svg>
+    <svg viewBox="-18 -18 36 38"><ellipse cy="17" rx="12" ry="2.6" fill="rgba(5,3,25,.4)"/><circle r="15" fill="url(#g-bola)"/><circle cx="-1.5" cy="-1.5" r="6.8" fill="url(#g-marfil)"/><text x="-1.5" y="1.9" font-size="9" font-weight="900" text-anchor="middle" fill="#111" font-family="Nunito,sans-serif">6</text><ellipse cx="-6" cy="-8" rx="4.5" ry="2.4" fill="#fff" opacity=".55" transform="rotate(-30 -6 -8)"/><path d="M8 -9 A13 13 0 0 1 12 6" stroke="#b9f5d4" stroke-width="1" fill="none" opacity=".45"/></svg>
   </button>
 
   <button class="obj" id="o-tienda" data-obj="tienda" aria-label="La casa de campaña">
-    <svg viewBox="0 0 220 150"><path d="M110 4 V22" stroke="#c4c9ee" stroke-width="3"/><path d="M110 4 L140 12 L110 20Z" fill="#8e4fd6"/>
-      <path d="M110 20 L210 145 H10Z" fill="#2346c8"/><path d="M110 20 L210 145 H150Z" fill="#1a3299"/><path class="puerta" d="M110 20 L140 145 H80Z" fill="#0b1240"/><path d="M110 20 L132 145 H110Z" fill="#6b2fb3" opacity=".9"/><path d="M110 20 L88 145 H110Z" fill="#7d3fb8"/>
-      <path d="M110 20 L210 145 M110 20 L10 145" stroke="#5b7cf0" stroke-width="3"/><ellipse cx="110" cy="146" rx="105" ry="5" fill="rgba(0,0,0,.25)"/></svg>
+    <svg viewBox="0 0 220 160"><ellipse cx="112" cy="150" rx="108" ry="7" fill="rgba(5,5,30,.45)"/>
+      <path d="M30 120 L2 156 M190 120 L218 156" stroke="#c4c9ee" stroke-width="1" opacity=".35"/>
+      <path d="M110 19 V4" stroke="#d8dcf5" stroke-width="2.6" stroke-linecap="round"/><path class="bandera" d="M110 4 Q124 6 138 10 Q124 13 110 17Z" fill="url(#g-solapa)"/>
+      <path d="M110 18 L8 148 H110Z" fill="url(#g-tela-luz)"/><path d="M110 18 L212 148 H110Z" fill="url(#g-tela-sombra)"/>
+      <path class="puerta" d="M110 30 L82 148 H138Z" fill="#070b30"/><path class="luz-tienda" d="M110 30 L82 148 H138Z" fill="url(#g-luzint)"/>
+      <path d="M110 30 L82 148 L97 148 Q102 92 110 30Z" fill="url(#g-solapa)"/><path d="M110 30 L138 148 L124 148 Q118 92 110 30Z" fill="#4a1f8e"/>
+      <path d="M110 18 L59 148 M110 18 L161 148" stroke="#fff" stroke-opacity=".13" stroke-width="1.2"/>
+      <path d="M110 18 L8 148" stroke="#ffb36b" stroke-opacity=".55" stroke-width="2"/><path d="M110 18 L212 148" stroke="#7d98ff" stroke-opacity=".45" stroke-width="2"/>
+      <path d="M6 148 H214" stroke="#0b1240" stroke-width="3" stroke-linecap="round"/></svg>
   </button>
 
   <div class="fogata-luz" aria-hidden="true"></div>
   <button class="obj" id="o-fogata" data-obj="fogata" aria-label="La fogata">
-    <svg viewBox="0 0 120 100"><g class="llama" style="--f:.9s"><path d="M60 8 C80 30 92 50 86 72 C82 88 38 88 34 72 C28 50 44 38 50 22 C54 34 58 38 60 40 C64 28 64 18 60 8Z" fill="#ff6a3d"/></g><g class="llama" style="--f:.6s"><path d="M60 34 C72 48 76 60 72 72 C68 82 52 82 48 72 C44 60 52 52 60 34Z" fill="#ffb347"/></g><g class="llama" style="--f:.45s"><path d="M60 54 C66 62 68 68 66 74 C64 80 56 80 54 74 C52 68 56 62 60 54Z" fill="#fff0a8"/></g>
-      <rect x="18" y="78" width="84" height="12" rx="6" fill="#6b3f22" transform="rotate(12 60 84)"/><rect x="18" y="78" width="84" height="12" rx="6" fill="#80502c" transform="rotate(-12 60 84)"/><g fill="#5a5470"><circle cx="16" cy="94" r="6"/><circle cx="104" cy="94" r="6"/><circle cx="30" cy="97" r="5"/><circle cx="90" cy="97" r="5"/></g></svg>
+    <svg viewBox="0 0 120 112"><ellipse cx="60" cy="92" rx="58" ry="18" fill="url(#g-halo)"/>
+      <g class="llama" style="--f:.9s"><path d="M60 6 C82 30 94 52 87 76 C82 92 38 92 33 76 C27 52 44 38 50 20 C54 33 58 37 60 40 C64 27 65 17 60 6Z" fill="url(#g-llama1)"/></g>
+      <g class="llama" style="--f:.6s"><path d="M60 32 C73 47 78 61 73 75 C69 86 51 86 47 75 C43 61 51 51 60 32Z" fill="url(#g-llama2)"/></g>
+      <g class="llama" style="--f:.45s"><path d="M60 54 C67 62 69 69 67 75 C65 82 55 82 53 75 C51 69 54 62 60 54Z" fill="url(#g-llama3)"/></g>
+      <g transform="rotate(14 60 86)"><rect x="16" y="80" width="88" height="12" rx="6" fill="url(#g-tronco)"/><ellipse cx="102" cy="86" rx="3.5" ry="6" fill="#c08a5a"/><ellipse cx="102" cy="86" rx="1.8" ry="3.5" fill="#7a4a26"/></g>
+      <g transform="rotate(-14 60 86)"><rect x="16" y="80" width="88" height="12" rx="6" fill="url(#g-tronco)"/><ellipse cx="18" cy="86" rx="3.5" ry="6" fill="#c08a5a"/><ellipse cx="18" cy="86" rx="1.8" ry="3.5" fill="#7a4a26"/></g>
+      <g fill="#ff7a2a"><circle cx="50" cy="88" r="1.6"/><circle cx="66" cy="90" r="1.3"/><circle cx="58" cy="86" r="1.1" fill="#ffd25a"/></g>
+      <g fill="url(#g-piedra)"><ellipse cx="12" cy="99" rx="9" ry="6.5"/><ellipse cx="30" cy="104" rx="9" ry="6"/><ellipse cx="50" cy="107" rx="9" ry="5.5"/><ellipse cx="70" cy="107" rx="9" ry="5.5"/><ellipse cx="90" cy="104" rx="9" ry="6"/><ellipse cx="108" cy="99" rx="9" ry="6.5"/></g></svg>
   </button>
 
   <button class="obj" id="o-cangrejo" data-obj="schmubsibu" aria-label="Un cangrejito">
-    <svg viewBox="0 0 60 40"><g fill="#e8553e"><ellipse cx="30" cy="24" rx="16" ry="10"/><path d="M14 20 Q4 10 8 4 Q12 10 16 12Z M46 20 Q56 10 52 4 Q48 10 44 12Z"/><circle cx="8" cy="5" r="5"/><circle cx="52" cy="5" r="5"/></g><g stroke="#e8553e" stroke-width="2.5" stroke-linecap="round"><path d="M18 30 L10 38 M22 32 L17 39 M42 30 L50 38 M38 32 L43 39"/><path d="M25 15 V9 M35 15 V9"/></g><circle cx="25" cy="8" r="3" fill="#fff"/><circle cx="35" cy="8" r="3" fill="#fff"/><circle cx="25.5" cy="8.5" r="1.4" fill="#111"/><circle cx="35.5" cy="8.5" r="1.4" fill="#111"/></svg>
+    <svg viewBox="0 0 60 42"><ellipse cx="30" cy="38" rx="17" ry="3" fill="rgba(5,3,25,.35)"/><g stroke="#b83a22" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M18 30 Q12 32 9 39 M21 32 Q17 35 15 40 M42 30 Q48 32 51 39 M39 32 Q43 35 45 40"/><path d="M17 22 Q10 18 9 11 M43 22 Q50 18 51 11"/><path d="M25 16 V9 M35 16 V9"/></g>
+      <path d="M3 8 Q4 0 11 2 Q14 6 10 9 Q13 12 8 13 Q3 13 3 8Z" fill="url(#g-cangrejo)"/><path d="M57 8 Q56 0 49 2 Q46 6 50 9 Q47 12 52 13 Q57 13 57 8Z" fill="url(#g-cangrejo)"/>
+      <ellipse cx="30" cy="25" rx="16" ry="10" fill="url(#g-cangrejo)"/><path d="M18 22 Q30 15 42 22" stroke="#ffc09a" stroke-width="1.2" fill="none" opacity=".6"/>
+      <circle cx="25" cy="8" r="3.4" fill="#fff"/><circle cx="35" cy="8" r="3.4" fill="#fff"/><circle cx="25.6" cy="8.6" r="1.7" fill="#1a1030"/><circle cx="35.6" cy="8.6" r="1.7" fill="#1a1030"/><circle cx="26.2" cy="7.8" r=".6" fill="#fff"/><circle cx="36.2" cy="7.8" r=".6" fill="#fff"/>
+      <path d="M26 29 Q30 32 34 29" stroke="#7a1a10" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
   </button>
   <button class="obj" id="o-bocina" data-obj="sonidera" aria-label="Algo medio enterrado en la arena">
-    <svg viewBox="0 0 50 54"><rect x="7" y="2" width="36" height="46" rx="4" fill="#2a1f6e" stroke="#8e4fd6" stroke-width="2"/><circle cx="25" cy="15" r="8" fill="#0b0b18" stroke="#f2c14e" stroke-width="1.6"/><circle cx="25" cy="15" r="3" fill="#3a3a55"/><circle cx="25" cy="34" r="10.5" fill="#0b0b18" stroke="#f2c14e" stroke-width="1.6"/><circle cx="25" cy="34" r="4" fill="#3a3a55"/><circle cx="12" cy="6" r="1.5" fill="#e0383e"/><path d="M0 54 Q8 40 25 44 T50 54Z" fill="#5d4a8a"/></svg>
+    <svg viewBox="0 0 50 56"><rect x="7" y="2" width="36" height="46" rx="4" fill="url(#g-madera)" stroke="url(#g-oro)" stroke-width="1.6"/><circle cx="25" cy="15" r="8" fill="url(#g-cono)" stroke="url(#g-oro)" stroke-width="1.4"/><circle cx="25" cy="15" r="2.6" fill="#6a6a8a"/><circle cx="25" cy="34" r="10.5" fill="url(#g-cono)" stroke="url(#g-oro)" stroke-width="1.4"/><circle cx="25" cy="34" r="3.6" fill="#6a6a8a"/><circle cx="12" cy="6" r="1.4" fill="#ff4fb3"/><path d="M0 56 Q8 40 25 45 T50 56Z" fill="#5d4a8a"/><path d="M4 50 Q12 44 22 46" stroke="#8a74c0" stroke-width="1" fill="none" opacity=".6"/></svg>
   </button>
   <div class="luces" aria-hidden="true"></div>
   <div id="burbuja" role="status" aria-live="polite"></div>
@@ -382,7 +437,7 @@ dialog[open]{animation:entra .32s var(--ease-out)}
 
 <noscript><p style="position:fixed;inset:auto 0 20px;text-align:center">Activa JavaScript para entrar al campamento 🏕️</p></noscript>
 
-<script src="datos.js?v=3"></script>
+<script src="datos.js?v=4"></script>
 <script>
 (() => {
 'use strict';
@@ -417,7 +472,30 @@ if (!quieto) setInterval(estrellaFugaz, 7000);
 
 /* pétalos de la flor (rojos y amarillos, como su ramo) */
 const pet = $('#petalos');
-for (let k = 0; k < 10; k++) pet.insertAdjacentHTML('beforeend', `<ellipse rx="3.6" ry="8" cy="-9" transform="rotate(${k*36})" fill="${k%2?'#f2c14e':'#e0383e'}"/>`);
+for (let k = 0; k < 14; k++) pet.insertAdjacentHTML('beforeend', `<ellipse rx="3.2" ry="9" cy="-10" transform="rotate(${(k * 360 / 14).toFixed(1)})" fill="${k % 2 ? '#ff5a3c' : '#d92a36'}"/>`);
+for (let k = 0; k < 12; k++) pet.insertAdjacentHTML('beforeend', `<ellipse rx="2.2" ry="5" cy="-6.5" transform="rotate(${k * 30 + 15})" fill="#f7c948"/>`);
+
+/* hojas de la palmera: cada penca con sus hojitas, dibujadas con código */
+(() => {
+  const g = $('.palmera .hojas'), cx = 118, cy = 92;
+  const F = [[-172, 92, 30], [-148, 96, 24], [-122, 86, 12], [-96, 78, 6], [-68, 86, 12], [-40, 96, 24], [-12, 98, 34], [16, 84, 40], [200, 70, 36]];
+  let html = '';
+  F.forEach(([a, L, dr]) => {
+    const r = a * Math.PI / 180, ex = cx + Math.cos(r) * L, ey = cy + Math.sin(r) * L + dr, mx = cx + Math.cos(r) * L * .5, my = cy + Math.sin(r) * L * .5 - 12;
+    const P = t => [(1 - t) ** 2 * cx + 2 * (1 - t) * t * mx + t * t * ex, (1 - t) ** 2 * cy + 2 * (1 - t) * t * my + t * t * ey];
+    const T = t => { const dx = 2 * (1 - t) * (mx - cx) + 2 * t * (ex - mx), dy = 2 * (1 - t) * (my - cy) + 2 * t * (ey - my), n = Math.hypot(dx, dy) || 1; return [dx / n, dy / n]; };
+    let d = '';
+    for (let t = .08; t < .97; t += .045) {
+      const [px, py] = P(t), [tx, ty] = T(t), l = (4 + 20 * Math.sin(Math.PI * Math.min(1, t * 1.1))) * (L / 95);
+      [-1, 1].forEach(s => {
+        const nx = -ty * s, ny = tx * s, qx = px + nx * l + tx * l * .55, qy = py + ny * l + ty * l * .55 + l * .35, f = v => v.toFixed(1);
+        d += `M${f(px - tx * 1.6)} ${f(py - ty * 1.6)} Q${f(px + nx * l * .5)} ${f(py + ny * l * .5 - 1)} ${f(qx)} ${f(qy)} Q${f(px + nx * l * .4 + tx * 2)} ${f(py + ny * l * .4 + ty * 2 + 1)} ${f(px + tx * 1.6)} ${f(py + ty * 1.6)}Z`;
+      });
+    }
+    html += `<path d="${d}" fill="url(#g-hoja)"/><path d="M${cx} ${cy} Q${mx.toFixed(1)} ${my.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" stroke="#4a40b0" stroke-width="1.8" fill="none" opacity=".8"/>`;
+  });
+  g.innerHTML = html;
+})();
 
 /* ---------- faro en Morse: TE AMO ---------- */
 const MORSE = { T:'-', E:'.', A:'.-', M:'--', O:'---' };
