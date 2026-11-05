@@ -852,6 +852,8 @@ const Son = (() => {
     iniciar, ambiente, ahora, toca, cuerda, acordeon, tono, crearBus, calentar, eco: (t, fb) => { ecoIn.delayTime.setValueAtTime(t, ac.currentTime); vueltaEco.gain.setValueAtTime(fb, ac.currentTime); }, usar: b => { dest = b; }, B: () => B, ok: () => !!ac && on,
     sfx(n) { if (!on || !iniciar()) return; try { efectos[n] && efectos[n](); } catch (e) {} },
     alternar() { on = !on; if (ac) { maestro.gain.setTargetAtTime(on ? .7 : 0, ac.currentTime, .05); if (on) ac.resume(); } return on; },
+    dormir() { try { if (ac) ac.suspend(); } catch (e) {} },
+    despertar() { try { if (ac && on) ac.resume(); } catch (e) {} },
     get on() { return on; }
   };
 })();
@@ -995,6 +997,9 @@ $('#btn-pista').addEventListener('click', () => {
   aviso('¡Ya lo completaste todo, exploradora! 🎁 Toca tus insignias para ver tus premios');
 });
 $('#btn-banda').addEventListener('click', banda);
+// si cambia de pestaña, bloquea el celular o cierra la página, todo el sonido se apaga
+document.addEventListener('visibilitychange', () => { if (document.hidden) { if (sonando) sonando.parar(); Son.dormir(); } else Son.despertar(); });
+addEventListener('pagehide', () => { if (sonando) sonando.parar(); Son.dormir(); });
 $('#btn-son').addEventListener('click', e => { const on = Son.alternar(); if (on) { Son.iniciar(); Son.ambiente(); } e.currentTarget.textContent = on ? '🔊' : '🔇'; e.currentTarget.setAttribute('aria-label', on ? 'Apagar el sonido' : 'Prender el sonido'); });
 
 /* ---------- carta final ---------- */
